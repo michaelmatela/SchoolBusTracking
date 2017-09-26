@@ -1,0 +1,30 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background_solid"
+    tools:context="tracking.bus.school.schoolbustracking.ChildrenFragment">
+
+    <Button
+        android:text="Back"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:textColor="#ffffff"
+        android:backgroundTint="#ffe680"
+        android:id="@+id/btnBack" />
+    <Button
+        android:text="Add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:textColor="#ffffff"
+        android:backgroundTint="#ffe680"
+        android:id="@+id/btnAdd" />
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/lvChildren"/>
+
+</LinearLayout>

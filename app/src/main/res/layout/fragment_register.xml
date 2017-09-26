@@ -1,0 +1,87 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background_solid"
+    tools:context="tracking.bus.school.schoolbustracking.RegisterFragment">
+
+    <TextView
+        android:text="Full Name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:id="@+id/textView2" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text=""
+        android:ems="10"
+        android:textSize="20dp"
+        android:id="@+id/etFullName" />
+
+    <TextView
+        android:text="Email Address/Username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:id="@+id/textView3" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:textSize="20dp"
+        android:id="@+id/etEmail" />
+
+    <TextView
+        android:text="Password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:id="@+id/textView4" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:textSize="20dp"
+        android:id="@+id/etPassword" />
+
+    <TextView
+        android:text="Retype Password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:id="@+id/textView5" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:textSize="20dp"
+        android:id="@+id/etRePassword" />
+
+    <Button
+        android:text="Register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:textColor="#ffffff"
+        android:backgroundTint="#ffe680"
+        android:id="@+id/btnRegister" />
+
+    <Button
+        android:text="Back"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:textColor="#ffffff"
+        android:backgroundTint="#ffe680"
+        android:id="@+id/btnBack" />
+</LinearLayout>

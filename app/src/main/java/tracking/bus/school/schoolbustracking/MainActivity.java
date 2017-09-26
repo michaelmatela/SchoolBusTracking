@@ -1,0 +1,281 @@
+package tracking.bus.school.schoolbustracking;
+
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
+
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Toast;
+
+import com.firebase.client.Firebase;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity {
+
+    private FirebaseUser user;
+    private FirebaseAuth mAuth;
+    FloatingActionButton fab_menu, fab_sos, fab_profile, fab_login, fab_register, fab_logout, fab_children, fab_follow;
+    Animation fabOpen, fabClose, rotateForward, rotateBackward;
+    boolean isOpen = false;
+    String login = "";
+
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference myRef;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (Config.APP_TYPE == "1")
+            setTitle("Servisibility (Driver)");
+        else
+            setTitle("Servisibility (Parent)");
+
+        fab_menu = (FloatingActionButton) findViewById(R.id.fab_menu);
+        fab_profile = (FloatingActionButton) findViewById(R.id.fab_profile);
+        fab_sos = (FloatingActionButton) findViewById(R.id.fab_sos);
+        fab_login = (FloatingActionButton) findViewById(R.id.fab_login);
+        fab_logout = (FloatingActionButton) findViewById(R.id.fab_logout);
+        fab_register = (FloatingActionButton) findViewById(R.id.fab_register);
+        fab_children = (FloatingActionButton) findViewById(R.id.fab_children);
+        fab_follow = (FloatingActionButton) findViewById(R.id.fab_follow);
+
+        fabOpen = AnimationUtils.loadAnimation(this,R.anim.fab_open);
+        fabClose = AnimationUtils.loadAnimation(this,R.anim.fab_close);
+
+        rotateForward = AnimationUtils.loadAnimation(this,R.anim.rotate_forward);
+        rotateBackward = AnimationUtils.loadAnimation(this,R.anim.rotate_backward);
+
+        fab_menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                animateFab();
+            }
+        });
+
+        fab_follow.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+
+                mFirebaseDatabase = FirebaseDatabase.getInstance();
+                myRef = mFirebaseDatabase.getReference().child("ParentDriver").child(user.getUid());
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                            Intent intent = new Intent(MainActivity.this, DriverMapsActivity.class);
+                            intent.putExtra("driverId", snapshot.getValue().toString());
+                            MainActivity.this.startActivity(intent);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+            }
+        });
+
+        fab_profile.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                animateFab();
+                Intent intent = new Intent(MainActivity.this, ParentMapsActivity.class);
+                MainActivity.this.startActivity(intent);
+
+            }
+        });
+
+        fab_sos.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                animateFab();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                SOSFragment sosFragment = new SOSFragment();
+                AddSOSFragment addSOSFragment = new AddSOSFragment();
+
+                if (Config.APP_TYPE == "1")
+                    fragmentTransaction.replace(R.id.fragment_container, addSOSFragment);
+                else
+                    fragmentTransaction.replace(R.id.fragment_container, sosFragment);
+
+                fragmentTransaction.commit();
+                mainGone();
+            }
+        });
+
+        fab_children.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                animateFab();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                ChildrenFragment childrenFragment = new ChildrenFragment();
+                fragmentTransaction.replace(R.id.fragment_container, childrenFragment);
+                fragmentTransaction.commit();
+                mainGone();
+            }
+        });
+
+        fab_register.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                animateFab();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                RegisterFragment registerFragment = new RegisterFragment();
+                fragmentTransaction.replace(R.id.fragment_container, registerFragment);
+                fragmentTransaction.commit();
+                mainGone();
+            }
+        });
+
+        fab_logout.setOnClickListener(new View.OnClickListener(){
+           @Override
+           public void onClick(View v){
+               animateFab();
+               AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+               builder.setTitle("Logout");
+               builder.setMessage("Are you sure you want to logout?");
+
+               builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                   public void onClick(DialogInterface dialog, int which) {
+                       // Do nothing but close the dialog
+                       FirebaseAuth.getInstance().signOut();
+                       Toast.makeText(getBaseContext(), "You are now Logged out.", Toast.LENGTH_LONG).show();
+                       dialog.dismiss();
+                   }
+               });
+
+               builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                   @Override
+                   public void onClick(DialogInterface dialog, int which) {
+
+                       // Do nothing
+                       dialog.dismiss();
+                   }
+               });
+
+               AlertDialog alert = builder.create();
+               alert.show();
+           }
+        });
+
+        fab_login.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                animateFab();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                LoginFragment loginFragment = new LoginFragment();
+                fragmentTransaction.replace(R.id.fragment_container, loginFragment);
+                fragmentTransaction.commit();
+                mainGone();
+            }
+        });
+    }
+
+    private void animateFab(){
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+
+        if(isOpen){
+            if(user == null){
+                fab_register.startAnimation(rotateForward);
+                fab_login.startAnimation(fabClose);
+                fab_register.startAnimation(fabClose);
+                fab_login.setVisibility(View.INVISIBLE);
+                fab_register.setVisibility(View.INVISIBLE);
+            }
+            else {
+                fab_menu.startAnimation(rotateForward);
+                fab_sos.startAnimation(fabClose);
+                fab_logout.startAnimation(fabClose);
+                fab_logout.setVisibility(View.INVISIBLE);
+                fab_sos.setVisibility(View.INVISIBLE);
+                if (Config.APP_TYPE == "2"){
+                    fab_profile.setVisibility(View.INVISIBLE);
+                    fab_profile.startAnimation(fabClose);
+                    fab_follow.setVisibility(View.INVISIBLE);
+                    fab_follow.startAnimation(fabClose);
+                }
+                fab_children.setVisibility(View.INVISIBLE);
+                fab_children.startAnimation(fabClose);
+
+            }
+            isOpen = false;
+        }
+        else{
+            if(user == null){
+                fab_register.startAnimation(rotateBackward);
+                fab_login.startAnimation(fabOpen);
+                fab_register.startAnimation(fabOpen);
+                fab_login.setVisibility(View.VISIBLE);
+                fab_register.setVisibility(View.VISIBLE);
+            }
+            else {
+                fab_menu.startAnimation(rotateBackward);
+
+                fab_sos.startAnimation(fabOpen);
+                fab_logout.startAnimation(fabOpen);
+                fab_logout.setVisibility(View.VISIBLE);
+                fab_sos.setVisibility(View.VISIBLE);
+                if (Config.APP_TYPE == "2"){
+                    fab_profile.startAnimation(fabOpen);
+                    fab_profile.setVisibility(View.VISIBLE);
+                    fab_follow.startAnimation(fabOpen);
+                    fab_follow.setVisibility(View.VISIBLE);
+                }
+
+                fab_children.setVisibility(View.VISIBLE);
+                fab_children.startAnimation(fabOpen);
+
+            }
+            isOpen = true;
+        }
+    }
+
+    public void removeFragment(){
+        try {
+            List<Fragment> fragments = getSupportFragmentManager().getFragments();
+            if (fragments != null) {
+                for (Fragment fragment : fragments) {
+                    getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+                }
+            }
+        }
+        catch (NullPointerException e){}
+    }
+
+    public void mainGone(){
+        fab_menu.setVisibility(View.GONE);
+    }
+
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/mnuFollowChild"
+        android:title="View Location" />
+    <item android:id="@+id/mnuRide"
+        android:title="Fetch" />
+    <item android:id="@+id/mnuDropS"
+        android:title="Drop to School" />
+    <item android:id="@+id/mnuDropH"
+        android:title="Drop to Home" />
+</menu>

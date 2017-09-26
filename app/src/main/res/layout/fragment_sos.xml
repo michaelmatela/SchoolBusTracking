@@ -1,0 +1,22 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background_solid"
+    tools:context="tracking.bus.school.schoolbustracking.SOSFragment">
+    <Button
+        android:text="Back"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:id="@+id/btnBack"
+        android:textColor="#ffffff"
+        android:backgroundTint="#ffe680"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/lvSOS"/>
+
+</LinearLayout>
