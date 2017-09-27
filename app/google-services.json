@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "829499855055",
-    "firebase_url": "https://schoolbusapp-22e16.firebaseio.com",
-    "project_id": "schoolbusapp-22e16",
-    "storage_bucket": "schoolbusapp-22e16.appspot.com"
+    "project_number": "376258873369",
+    "firebase_url": "https://servisibility-6a5fe.firebaseio.com",
+    "project_id": "servisibility-6a5fe",
+    "storage_bucket": "servisibility-6a5fe.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:829499855055:android:17651cfee80e5958",
+        "mobilesdk_app_id": "1:376258873369:android:17651cfee80e5958",
         "android_client_info": {
           "package_name": "tracking.bus.school.schoolbustracking"
         }
       },
       "oauth_client": [
         {
-          "client_id": "829499855055-icnmivrmdhoo9aubcqsvvt2863372rm0.apps.googleusercontent.com",
+          "client_id": "376258873369-8oinjr7v6vh17i4f2r3h2spuc9n6svls.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCzK7LYxri9Z8j43lGTPamW0ctf9nS7mlw"
+          "current_key": "AIzaSyC7oPuE73sWENI8nmXL36m-dVCkkGjkDjA"
         }
       ],
       "services": {
