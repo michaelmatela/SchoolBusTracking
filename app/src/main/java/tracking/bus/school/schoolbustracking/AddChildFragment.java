@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +20,18 @@ import android.widget.Toast;
 import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import tracking.bus.school.schoolbustracking.Adapter.ChildAdapter;
 import tracking.bus.school.schoolbustracking.Models.Child;
 
 import static android.app.Activity.RESULT_OK;
@@ -35,11 +44,18 @@ public class AddChildFragment extends Fragment {
     Button btnBack;
     ImageView ivPic;
 
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference myRef;
     private FirebaseUser user;
     private FirebaseAuth mAuth;
 
+    ArrayList<Child> children;
+
     String name;
     String parent;
+    String driver;
+    String count;
+    String currentChildren;
     FloatingActionButton fab_menu;
 
     @Override
@@ -57,7 +73,69 @@ public class AddChildFragment extends Fragment {
 
         parent = user.getUid();
 
-        ivPic.setOnClickListener(new View.OnClickListener() {
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = mFirebaseDatabase.getReference().child("ParentDriver").child(user.getUid());
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                try {
+                    driver = snapshot.getValue().toString();
+                }
+                catch(NullPointerException e){
+                    driver = "";
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+        myRef = mFirebaseDatabase.getReference().child("Profile").child(user.getUid());
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                count =  snapshot.child("number_of_child").getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+        myRef = mFirebaseDatabase.getReference().child("Children");
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                children = new ArrayList<Child>();
+                children.clear();
+                ArrayList<StorageReference> storageReferences = new ArrayList<StorageReference>();
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    Child destination = new Child();
+                    destination.setName(ds.child("name").getValue().toString());
+                    destination.setParent(ds.child("parent").getValue().toString());
+                    destination.setStatus(ds.child("status").getValue().toString());
+
+                    try {
+                        destination.setDriver(ds.child("driver").getValue().toString());
+                    } catch (NullPointerException e) {
+                    }
+                    if (destination.getParent().equals(user.getUid()))
+                        children.add(destination);
+
+                }
+
+                currentChildren = Integer.toString(children.size());
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+
+
+    ivPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent pickPhoto = new Intent(Intent.ACTION_PICK,
@@ -108,35 +186,43 @@ public class AddChildFragment extends Fragment {
         etName = (EditText) view.findViewById(R.id.etName);
         name = etName.getText().toString();
 
-        if (!name.isEmpty()) {
-            if (ivPic.getTag() != null) {
-                Firebase ref = new Firebase(Config.FIREBASE_URL);
-                Child destination = new Child();
+        if (Integer.parseInt(count) >= (Integer.parseInt(currentChildren) + 1)) {
+            if (!driver.isEmpty()) {
+                if (!name.isEmpty()) {
+                    if (ivPic.getTag() != null) {
+                        Firebase ref = new Firebase(Config.FIREBASE_URL);
+                        Child destination = new Child();
 
-                destination.setName(name);
-                destination.setParent(parent);
-                destination.setStatus("Home");
+                        destination.setName(name);
+                        destination.setParent(parent);
+                        destination.setDriver(driver);
+                        destination.setStatus("Home");
 
-                ref.child("Children").child(name).setValue(destination);
+                        ref.child("Children").child(name).setValue(destination);
 
-                String path = ivPic.getTag().toString();
-                Uri uri = Uri.parse(path);
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference storageRef = storage.getReference().child("Children").child(name);
-                storageRef.putFile(uri);
+                        String path = ivPic.getTag().toString();
+                        Uri uri = Uri.parse(path);
+                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                        StorageReference storageRef = storage.getReference().child("Children").child(name);
+                        storageRef.putFile(uri);
 
 
-                Toast.makeText(getActivity(), "Add child successful.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Add child successful.", Toast.LENGTH_LONG).show();
 
-                etName.setText("");
+                        etName.setText("");
+                    } else {
+                        Toast.makeText(getActivity(), "Please choose a photo for this child", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "Please fill name field.", Toast.LENGTH_LONG).show();
+                }
             } else {
-                Toast.makeText(getActivity(), "Please choose a photo for this child", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Please contact admin first to continue.", Toast.LENGTH_LONG).show();
             }
         }
         else{
-            Toast.makeText(getActivity(), "Please fill name field.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Please contact admin first to continue.", Toast.LENGTH_LONG).show();
         }
-
 
     }
 

@@ -7,21 +7,44 @@
     android:background="@drawable/background_solid"
     tools:context="tracking.bus.school.schoolbustracking.DriverMapsActivity">
 
-    <Button
-        android:text="Back"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:textColor="#ffffff"
-        android:backgroundTint="#ffe680"
-        android:id="@+id/btnBack" />
-
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:map="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
+        android:orientation="vertical"
+        android:id="@+id/llButtons">
+        <Button
+            android:text="Back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textColor="#ffffff"
+            android:backgroundTint="#ffe680"
+            android:id="@+id/btnBack" />
+
+        <Button
+            android:text="View Driver"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textColor="#ffffff"
+            android:backgroundTint="#ffe680"
+            android:id="@+id/btnDriver" />
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:map="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/fragment_container"
+        android:visibility="gone">
+
+    </FrameLayout>
 </LinearLayout>

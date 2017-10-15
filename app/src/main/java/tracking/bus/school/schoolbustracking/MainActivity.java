@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseUser user;
     private FirebaseAuth mAuth;
-    FloatingActionButton fab_menu, fab_sos, fab_profile, fab_login, fab_register, fab_logout, fab_children, fab_follow;
+    FloatingActionButton fab_menu, fab_sos, fab_profile, fab_login, fab_register, fab_logout, fab_children, fab_follow, fab_admin_map, fab_driver_lists, fab_parent_lists, fab_parent_to_driver;
     Animation fabOpen, fabClose, rotateForward, rotateBackward;
     boolean isOpen = false;
     String login = "";
@@ -54,8 +54,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if (Config.APP_TYPE == "1")
             setTitle("Servisibility (Driver)");
-        else
+        else if (Config.APP_TYPE == "2")
             setTitle("Servisibility (Parent)");
+        else
+            setTitle("Servisibility (Admin)");
 
         fab_menu = (FloatingActionButton) findViewById(R.id.fab_menu);
         fab_profile = (FloatingActionButton) findViewById(R.id.fab_profile);
@@ -65,6 +67,11 @@ public class MainActivity extends AppCompatActivity {
         fab_register = (FloatingActionButton) findViewById(R.id.fab_register);
         fab_children = (FloatingActionButton) findViewById(R.id.fab_children);
         fab_follow = (FloatingActionButton) findViewById(R.id.fab_follow);
+        fab_admin_map = (FloatingActionButton) findViewById(R.id.fab_admin_map);
+        fab_driver_lists = (FloatingActionButton) findViewById(R.id.fab_driver_lists);
+        fab_parent_lists = (FloatingActionButton) findViewById(R.id.fab_parent_lists);
+        fab_parent_to_driver = (FloatingActionButton) findViewById(R.id.fab_parent_to_driver);
+
 
         fabOpen = AnimationUtils.loadAnimation(this,R.anim.fab_open);
         fabClose = AnimationUtils.loadAnimation(this,R.anim.fab_close);
@@ -110,6 +117,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        fab_admin_map.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                animateFab();
+                Intent intent = new Intent(MainActivity.this, AdminMapsActivity.class);
+                MainActivity.this.startActivity(intent);
+
+            }
+        });
+
+        fab_parent_to_driver.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                animateFab();
+                Intent intent = new Intent(MainActivity.this, ParentToDriverActivity.class);
+                MainActivity.this.startActivity(intent);
+
+            }
+        });
+
         fab_sos.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -129,6 +156,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
         fab_children.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -137,6 +166,32 @@ public class MainActivity extends AppCompatActivity {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 ChildrenFragment childrenFragment = new ChildrenFragment();
                 fragmentTransaction.replace(R.id.fragment_container, childrenFragment);
+                fragmentTransaction.commit();
+                mainGone();
+            }
+        });
+
+        fab_driver_lists.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                animateFab();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                DriverListFragment driverListFragment = new DriverListFragment();
+                fragmentTransaction.replace(R.id.fragment_container, driverListFragment);
+                fragmentTransaction.commit();
+                mainGone();
+            }
+        });
+
+        fab_parent_lists.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                animateFab();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                ParentListFragment parentListFragment = new ParentListFragment();
+                fragmentTransaction.replace(R.id.fragment_container, parentListFragment);
                 fragmentTransaction.commit();
                 mainGone();
             }
@@ -220,14 +275,30 @@ public class MainActivity extends AppCompatActivity {
                 fab_logout.startAnimation(fabClose);
                 fab_logout.setVisibility(View.INVISIBLE);
                 fab_sos.setVisibility(View.INVISIBLE);
-                if (Config.APP_TYPE == "2"){
+                if (Config.APP_TYPE == "1"){
+                    fab_children.setVisibility(View.INVISIBLE);
+                    fab_children.startAnimation(fabClose);
+                }
+                else if (Config.APP_TYPE == "2"){
                     fab_profile.setVisibility(View.INVISIBLE);
                     fab_profile.startAnimation(fabClose);
                     fab_follow.setVisibility(View.INVISIBLE);
                     fab_follow.startAnimation(fabClose);
+
+                    fab_children.setVisibility(View.INVISIBLE);
+                    fab_children.startAnimation(fabClose);
                 }
-                fab_children.setVisibility(View.INVISIBLE);
-                fab_children.startAnimation(fabClose);
+                else {
+                    fab_admin_map.setVisibility(View.INVISIBLE);
+                    fab_admin_map.startAnimation(fabClose);
+                    fab_driver_lists.startAnimation(fabClose);
+                    fab_driver_lists.setVisibility(View.INVISIBLE);
+                    fab_parent_lists.startAnimation(fabClose);
+                    fab_parent_lists.setVisibility(View.INVISIBLE);
+                    fab_parent_to_driver.startAnimation(fabClose);
+                    fab_parent_to_driver.setVisibility(View.INVISIBLE);
+                }
+
 
             }
             isOpen = false;
@@ -247,15 +318,32 @@ public class MainActivity extends AppCompatActivity {
                 fab_logout.startAnimation(fabOpen);
                 fab_logout.setVisibility(View.VISIBLE);
                 fab_sos.setVisibility(View.VISIBLE);
-                if (Config.APP_TYPE == "2"){
+                if (Config.APP_TYPE == "1"){
+                    fab_children.setVisibility(View.VISIBLE);
+                    fab_children.startAnimation(fabOpen);
+                }
+
+                else if (Config.APP_TYPE == "2"){
                     fab_profile.startAnimation(fabOpen);
                     fab_profile.setVisibility(View.VISIBLE);
                     fab_follow.startAnimation(fabOpen);
                     fab_follow.setVisibility(View.VISIBLE);
+
+                    fab_children.setVisibility(View.VISIBLE);
+                    fab_children.startAnimation(fabOpen);
+                }
+                else{
+                    fab_admin_map.startAnimation(fabOpen);
+                    fab_admin_map.setVisibility(View.VISIBLE);
+                    fab_driver_lists.startAnimation(fabOpen);
+                    fab_driver_lists.setVisibility(View.VISIBLE);
+                    fab_parent_lists.startAnimation(fabOpen);
+                    fab_parent_lists.setVisibility(View.VISIBLE);
+                    fab_parent_to_driver.startAnimation(fabOpen);
+                    fab_parent_to_driver.setVisibility(View.VISIBLE);
                 }
 
-                fab_children.setVisibility(View.VISIBLE);
-                fab_children.startAnimation(fabOpen);
+
 
             }
             isOpen = true;

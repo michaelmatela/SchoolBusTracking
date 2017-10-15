@@ -97,6 +97,50 @@
     <!-- logged in -->
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_parent_to_driver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginBottom="310dp"
+        android:visibility="invisible"
+        android:src="@drawable/assignment" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_parent_lists"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginBottom="220dp"
+        android:visibility="invisible"
+        android:src="@drawable/family" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_driver_lists"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginBottom="160dp"
+        android:visibility="invisible"
+        android:src="@drawable/schoolbus" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_admin_map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginBottom="90dp"
+        android:visibility="invisible"
+        android:src="@drawable/setmap_icon" />
+
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -3,9 +3,8 @@ package tracking.bus.school.schoolbustracking;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v4.view.MarginLayoutParamsCompat;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,27 +16,19 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import tracking.bus.school.schoolbustracking.Models.LatitudeLongtitude;
-import tracking.bus.school.schoolbustracking.Models.SOS;
 
-public class ParentMapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class AdminMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     Button btnSave;
     Button btnBack;
-
-
-    private FirebaseUser user;
-    private FirebaseAuth mAuth;
-
     Button btnSearch;
     EditText etSearch;
     double home_long;
@@ -46,13 +37,16 @@ public class ParentMapsActivity extends FragmentActivity implements OnMapReadyCa
     MarkerOptions markerOptions;
     String addressText;
 
+    private FirebaseUser user;
+    private FirebaseAuth mAuth;
+
     String parentId;
 
     MarkerOptions marker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_parent_maps);
+        setContentView(R.layout.activity_admin_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -66,8 +60,8 @@ public class ParentMapsActivity extends FragmentActivity implements OnMapReadyCa
 
         btnSave = (Button) findViewById(R.id.btnSave);
         btnBack = (Button) findViewById(R.id.btnBack);
-        btnSearch = (Button) findViewById(R.id.btnSearch);
         etSearch = (EditText) findViewById(R.id.etSearch);
+        btnSearch = (Button) findViewById(R.id.btnSearch);
 
         btnSave.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -79,8 +73,8 @@ public class ParentMapsActivity extends FragmentActivity implements OnMapReadyCa
         btnBack.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Intent intent = new Intent(ParentMapsActivity.this, MainActivity.class);
-                ParentMapsActivity.this.startActivity(intent);
+                Intent intent = new Intent(AdminMapsActivity.this, MainActivity.class);
+                AdminMapsActivity.this.startActivity(intent);
             }
         });
 
@@ -107,9 +101,8 @@ public class ParentMapsActivity extends FragmentActivity implements OnMapReadyCa
 
             }
         });
-
-
     }
+
 
     protected void search(List<Address> addresses) {
 
@@ -143,7 +136,7 @@ public class ParentMapsActivity extends FragmentActivity implements OnMapReadyCa
             LatitudeLongtitude latitudeLongtitude = new LatitudeLongtitude();
             latitudeLongtitude.setLatitude(String.valueOf(marker.getPosition().latitude));
             latitudeLongtitude.setLongtitude(String.valueOf(marker.getPosition().longitude));
-            ref.child("ParentLocation").child(parentId).setValue(latitudeLongtitude);
+            ref.child("SchoolLocation").setValue(latitudeLongtitude);
 
             Toast.makeText(this, "location successfully updated.", Toast.LENGTH_LONG).show();
         }

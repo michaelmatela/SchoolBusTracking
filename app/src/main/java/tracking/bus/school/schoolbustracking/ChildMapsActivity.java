@@ -227,8 +227,11 @@ public class ChildMapsActivity extends FragmentActivity implements OnMapReadyCal
         mMap = googleMap;
         LatLng hcmus = new LatLng(14.6051599,120.9843697);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hcmus, 15));
+        mMap.addMarker(new MarkerOptions()
+                .position(hcmus).title("Driver Location")).showInfoWindow();
         originMarkers.add(mMap.addMarker(new MarkerOptions()
-                .position(hcmus)));
+                .position(hcmus).title("Driver Location")));
+
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -286,11 +289,11 @@ public class ChildMapsActivity extends FragmentActivity implements OnMapReadyCal
             originMarkers.add(mMap.addMarker(new MarkerOptions()
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.start_blue))
                     .title(route.startAddress)
-                    .position(route.startLocation)));
+                    .position(route.startLocation).title("Me")));
             destinationMarkers.add(mMap.addMarker(new MarkerOptions()
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green))
                     .title(route.endAddress)
-                    .position(route.endLocation)));
+                    .position(route.endLocation).title("student location")));
 
             PolylineOptions polylineOptions = new PolylineOptions().
                     geodesic(true).

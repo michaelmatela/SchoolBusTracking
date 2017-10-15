@@ -10,6 +10,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.Button;
 
@@ -19,6 +21,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -44,6 +47,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     LocationManager locationManager;
     Button btnBack;
     String driverId;
+    Button btnDriver;
 
 
     @Override
@@ -55,6 +59,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         btnBack = (Button) findViewById(R.id.btnBack);
+        btnDriver = (Button) findViewById(R.id.btnDriver);
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +68,27 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                 DriverMapsActivity.this.startActivity(intent);
             }
         });
+
+        btnDriver.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Bundle bundle1 = new Bundle();
+
+                bundle1.putString("driverId", driverId );
+
+                FragmentManager fragmentManager1 = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction1 = fragmentManager1.beginTransaction();
+                ViewDriverFragment children2Fragment = new ViewDriverFragment();
+                children2Fragment.setArguments(bundle1);
+                fragmentTransaction1.replace(R.id.fragment_container, children2Fragment);
+                fragmentTransaction1.commit();
+
+                findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
+                findViewById(R.id.llButtons).setVisibility(View.GONE);
+            }
+
+        });
+
         Bundle extras = getIntent().getExtras();
         driverId = extras.getString("driverId");
         mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -90,10 +116,11 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                                 try {
                                     List<Address> addressList = geocoder.getFromLocation(latitude1, longtitude1,1);
                                     mMap.clear();
-                                    mMap.addMarker(new MarkerOptions().position(latLang));
+                                    mMap.addMarker(new MarkerOptions().position(latLang).title("Driver Location")).showInfoWindow();
                                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLang,zoom));
                                     latLang = new LatLng(latitude2,longtitude2);
-                                    mMap.addMarker(new MarkerOptions().position(latLang));
+                                    mMap.addMarker(new MarkerOptions().position(latLang).title("School Location")).showInfoWindow();
+
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }

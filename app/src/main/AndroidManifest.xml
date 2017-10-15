@@ -40,18 +40,17 @@
 
         <activity
             android:name=".ParentMapsActivity"
-            android:label="@string/title_activity_parent_maps">
-        </activity>
+            android:label="@string/title_activity_parent_maps"></activity>
+        <activity
+            android:name=".AdminMapsActivity"
+            android:label="@string/title_activity_parent_maps"></activity>
         <activity
             android:name=".DriverMapsActivity"
-            android:label="@string/title_activity_driver_maps">
-
-        </activity>
+            android:label="@string/title_activity_driver_maps"></activity>
         <activity
             android:name=".ChildMapsActivity"
-            android:label="@string/title_activity_driver_maps">
-
-        </activity>
+            android:label="@string/title_activity_driver_maps"></activity>
+        <activity android:name=".ParentToDriverActivity"></activity>
     </application>
 
 </manifest>
