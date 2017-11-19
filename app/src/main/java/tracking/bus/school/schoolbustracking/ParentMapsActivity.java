@@ -1,8 +1,15 @@
 package tracking.bus.school.schoolbustracking;
 
+import android.*;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.view.MarginLayoutParamsCompat;
@@ -12,6 +19,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -23,6 +31,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import tracking.bus.school.schoolbustracking.Models.LatitudeLongtitude;
@@ -47,8 +56,10 @@ public class ParentMapsActivity extends FragmentActivity implements OnMapReadyCa
     String addressText;
 
     String parentId;
+    LocationManager locationManager;
 
     MarkerOptions marker;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,16 +80,16 @@ public class ParentMapsActivity extends FragmentActivity implements OnMapReadyCa
         btnSearch = (Button) findViewById(R.id.btnSearch);
         etSearch = (EditText) findViewById(R.id.etSearch);
 
-        btnSave.setOnClickListener(new View.OnClickListener(){
+        btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 updateLocation();
             }
         });
 
-        btnBack.setOnClickListener(new View.OnClickListener(){
+        btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 Intent intent = new Intent(ParentMapsActivity.this, MainActivity.class);
                 ParentMapsActivity.this.startActivity(intent);
             }
@@ -108,11 +119,102 @@ public class ParentMapsActivity extends FragmentActivity implements OnMapReadyCa
             }
         });
 
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new android.location.LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    double longtitude = location.getLongitude();
+                    double latitude = location.getLatitude();
+                    LatLng sydney = new LatLng(latitude, longtitude);
+                    marker = new MarkerOptions().position(sydney);
+                    mMap.addMarker(new MarkerOptions().position(sydney));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,15));
+
+                    if (ActivityCompat.checkSelfPermission(ParentMapsActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ParentMapsActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return;
+                    }
+                    locationManager.removeUpdates(this);
+
+
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                }
+
+                @Override
+                public void onProviderEnabled(String provider) {
+
+                }
+
+                @Override
+                public void onProviderDisabled(String provider) {
+
+                }
+            });
+        } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new android.location.LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    double longtitude = location.getLongitude();
+                    double latitude = location.getLatitude();
+                    LatLng sydney = new LatLng(latitude, longtitude);
+                    marker = new MarkerOptions().position(sydney);
+                    mMap.addMarker(new MarkerOptions().position(sydney));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,15));
+                    if (ActivityCompat.checkSelfPermission(ParentMapsActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ParentMapsActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return;
+                    }
+                    locationManager.removeUpdates(this);
+
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                }
+
+                @Override
+                public void onProviderEnabled(String provider) {
+
+                }
+
+                @Override
+                public void onProviderDisabled(String provider) {
+
+                }
+            });
+        }
 
     }
 
     protected void search(List<Address> addresses) {
-
         Address address = (Address) addresses.get(0);
         home_long = address.getLongitude();
         home_lat = address.getLatitude();
@@ -133,8 +235,7 @@ public class ParentMapsActivity extends FragmentActivity implements OnMapReadyCa
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
     }
 
-    private void updateLocation(){
-
+    private void updateLocation() {
 
 
         if (marker != null) {
@@ -146,28 +247,13 @@ public class ParentMapsActivity extends FragmentActivity implements OnMapReadyCa
             ref.child("ParentLocation").child(parentId).setValue(latitudeLongtitude);
 
             Toast.makeText(this, "location successfully updated.", Toast.LENGTH_LONG).show();
-        }
-        else{
+        } else {
             Toast.makeText(this, "please pick location.", Toast.LENGTH_LONG).show();
         }
 
 
-
     }
 
-
-
-
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;

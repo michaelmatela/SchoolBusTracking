@@ -6,5 +6,5 @@ package tracking.bus.school.schoolbustracking;
 
 public class Config {
     public static final String FIREBASE_URL = "https://servisibility-6a5fe.firebaseio.com/";
-    public static final String APP_TYPE = "1";
+    public static String APP_TYPE;
 }

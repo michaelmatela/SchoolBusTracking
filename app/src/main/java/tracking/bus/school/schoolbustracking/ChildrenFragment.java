@@ -80,8 +80,24 @@ public class ChildrenFragment extends Fragment implements PopupMenu.OnMenuItemCl
         btnBack = (Button) view.findViewById(R.id.btnBack);
         btnAdd = (Button) view.findViewById(R.id.btnAdd);
 
-        if(Config.APP_TYPE == "1")
-            btnAdd.setVisibility(View.GONE);
+
+
+
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = mFirebaseDatabase.getReference().child("Profile").child(user.getUid()).child("type");
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Config.APP_TYPE = snapshot.getValue().toString();
+                if(Config.APP_TYPE.equals("1"))
+                    btnAdd.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
         btnBack.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -131,7 +147,7 @@ public class ChildrenFragment extends Fragment implements PopupMenu.OnMenuItemCl
 
 
                     storageReferences.add(storageRef);
-                    if(Config.APP_TYPE=="1") {
+                    if(Config.APP_TYPE.equals("1")) {
                         try{
                             if (!destination.getDriver().isEmpty()) {
                                 if(destination.getDriver().equals(user.getUid()))
@@ -166,7 +182,7 @@ public class ChildrenFragment extends Fragment implements PopupMenu.OnMenuItemCl
                         new RecyclerItemListener.RecyclerTouchListener() {
                             public void onClickItem(View v, int position) {
                                 System.out.println(Config.APP_TYPE);
-                                if (Config.APP_TYPE == "1"){
+                                if (Config.APP_TYPE.equals("1")){
                                     popup = new PopupMenu(getActivity(), v);
                                     MenuInflater inflater2 = popup.getMenuInflater();
                                     inflater2.inflate(R.menu.children_menu, popup.getMenu());

@@ -19,6 +19,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20dp"
+        android:textColor="#ffffff"
+        android:backgroundTint="#ffe680"
         android:id="@+id/btnBack" />
 
     <EditText

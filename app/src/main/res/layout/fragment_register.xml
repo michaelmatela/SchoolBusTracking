@@ -83,6 +83,13 @@
                 android:textSize="20dp"
                 android:id="@+id/etRePassword" />
 
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawSelectorOnTop="true"
+                android:entries="@array/array_spinner"
+                android:id="@+id/spinner" />
+
             <Button
                 android:text="Register"
                 android:layout_width="match_parent"

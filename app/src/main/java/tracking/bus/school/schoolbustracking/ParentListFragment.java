@@ -66,10 +66,30 @@ public class ParentListFragment extends Fragment implements PopupMenu.OnMenuItem
         user = mAuth.getCurrentUser();
         fab_menu = (FloatingActionButton) getActivity().findViewById(R.id.fab_menu);
 
+
+
         Firebase.setAndroidContext(getActivity());
 
         btnBack = (Button) view.findViewById(R.id.btnBack);
 
+
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = mFirebaseDatabase.getReference().child("ParentDriver").child(user.getUid());
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                try {
+                    driverId = snapshot.getValue().toString();
+                }
+                catch(NullPointerException e){
+                    driverId = "";
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
 
         btnBack.setOnClickListener(new View.OnClickListener() {
                                        @Override
@@ -131,8 +151,7 @@ public class ParentListFragment extends Fragment implements PopupMenu.OnMenuItem
                         new RecyclerItemListener.RecyclerTouchListener() {
                             public void onClickItem(View v, int position) {
                                 final int samplePosition = position;
-                                System.out.println(Config.APP_TYPE);
-                                if (Config.APP_TYPE == "3"){
+                                if (driverId.isEmpty()){
                                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                     builder.setTitle("Input Number Children");
                                    View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.input_box_layout, (ViewGroup) getView(), false);
@@ -158,8 +177,8 @@ public class ParentListFragment extends Fragment implements PopupMenu.OnMenuItem
 
                                     builder.show();
                                 }
-                                else if (Config.APP_TYPE == "2"){
-
+                                else {
+                                    Toast.makeText(getActivity(), "You cannot edit this account because it is already set to a driver and might cause a discrepancy.", Toast.LENGTH_LONG).show();
                                 }
                             }
 

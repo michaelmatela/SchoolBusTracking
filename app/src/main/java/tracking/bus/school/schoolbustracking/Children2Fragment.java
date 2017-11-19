@@ -75,8 +75,22 @@ public class Children2Fragment extends Fragment implements PopupMenu.OnMenuItemC
         btnBack = (Button) view.findViewById(R.id.btnBack);
         btnAdd = (Button) view.findViewById(R.id.btnAdd);
 
-        if(Config.APP_TYPE == "3")
-            btnAdd.setVisibility(View.GONE);
+
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = mFirebaseDatabase.getReference().child("Profile").child(user.getUid()).child("type");
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Config.APP_TYPE = snapshot.getValue().toString();
+                if(Config.APP_TYPE.equals("3"))
+                    btnAdd.setVisibility(View.GONE);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
 
         btnBack.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -114,25 +128,10 @@ public class Children2Fragment extends Fragment implements PopupMenu.OnMenuItemC
                     }
                     catch(NullPointerException e){}
 
-
-
                     storageReferences.add(storageRef);
-                    if(Config.APP_TYPE=="1") {
-                        try{
-                            if (!destination.getDriver().isEmpty()) {
-                                if(destination.getDriver().equals(user.getUid()))
-                                    children.add(destination);
-                            }
-                        }
-                        catch(NullPointerException e){}
 
-                    }
-                    else{
-                        if (!destination.getParent().isEmpty()) {
-                            if(destination.getParent().equals(user.getUid()))
-                                children.add(destination);
-                        }
-                    }
+                    if(parentId.equals(destination.getParent()))
+                        children.add(destination);
                 }
 
                 childAdapter = new ChildAdapter(children);

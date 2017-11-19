@@ -23,6 +23,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Search"
+                android:textColor="#ffffff"
+                android:backgroundTint="#ffe680"
                 android:id="@+id/btnSearch"/>
         </LinearLayout>
         <Button

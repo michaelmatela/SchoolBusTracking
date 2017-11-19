@@ -227,10 +227,7 @@ public class ChildMapsActivity extends FragmentActivity implements OnMapReadyCal
         mMap = googleMap;
         LatLng hcmus = new LatLng(14.6051599,120.9843697);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hcmus, 15));
-        mMap.addMarker(new MarkerOptions()
-                .position(hcmus).title("Driver Location")).showInfoWindow();
-        originMarkers.add(mMap.addMarker(new MarkerOptions()
-                .position(hcmus).title("Driver Location")));
+
 
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     boolean isOpen = false;
     String login = "";
 
+    FragmentManager fragmentManager;
+    FragmentTransaction fragmentTransaction;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myRef;
 
@@ -52,12 +54,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if (Config.APP_TYPE == "1")
-            setTitle("Servisibility (Driver)");
-        else if (Config.APP_TYPE == "2")
-            setTitle("Servisibility (Parent)");
-        else
-            setTitle("Servisibility (Admin)");
+
+        try{
+            if (Config.APP_TYPE.equals("3"))
+                setTitle("Servisibility (Admin)");
+            else if (Config.APP_TYPE.equals("2"))
+                setTitle("Servisibility (Parent)");
+            else if (Config.APP_TYPE.equals("1"))
+                setTitle("Servisibility (Driver)");
+        }
+        catch (NullPointerException e){setTitle("Servisibility");}
 
         fab_menu = (FloatingActionButton) findViewById(R.id.fab_menu);
         fab_profile = (FloatingActionButton) findViewById(R.id.fab_profile);
@@ -95,9 +101,12 @@ public class MainActivity extends AppCompatActivity {
                 myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
+                        try {
                             Intent intent = new Intent(MainActivity.this, DriverMapsActivity.class);
                             intent.putExtra("driverId", snapshot.getValue().toString());
                             MainActivity.this.startActivity(intent);
+                        }
+                        catch(NullPointerException e){ Toast.makeText(MainActivity.this, "Please contact admin to use this feature.", Toast.LENGTH_LONG).show();}
                     }
 
                     @Override
@@ -140,19 +149,35 @@ public class MainActivity extends AppCompatActivity {
         fab_sos.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                animateFab();
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                SOSFragment sosFragment = new SOSFragment();
-                AddSOSFragment addSOSFragment = new AddSOSFragment();
 
-                if (Config.APP_TYPE == "1")
-                    fragmentTransaction.replace(R.id.fragment_container, addSOSFragment);
-                else
-                    fragmentTransaction.replace(R.id.fragment_container, sosFragment);
+                mFirebaseDatabase = FirebaseDatabase.getInstance();
+                myRef = mFirebaseDatabase.getReference().child("Profile").child(user.getUid()).child("type");
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
 
-                fragmentTransaction.commit();
-                mainGone();
+                        animateFab();
+                        Config.APP_TYPE = snapshot.getValue().toString();
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        SOSFragment sosFragment = new SOSFragment();
+                        AddSOSFragment addSOSFragment = new AddSOSFragment();
+
+                        if (Config.APP_TYPE.equals("1"))
+                            fragmentTransaction.replace(R.id.fragment_container, addSOSFragment);
+                        else
+                            fragmentTransaction.replace(R.id.fragment_container, sosFragment);
+
+                        fragmentTransaction.commit();
+                        mainGone();
+
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+
+
             }
         });
 
@@ -223,6 +248,7 @@ public class MainActivity extends AppCompatActivity {
                    public void onClick(DialogInterface dialog, int which) {
                        // Do nothing but close the dialog
                        FirebaseAuth.getInstance().signOut();
+                       setTitle("Servisibility");
                        Toast.makeText(getBaseContext(), "You are now Logged out.", Toast.LENGTH_LONG).show();
                        dialog.dismiss();
                    }
@@ -270,36 +296,46 @@ public class MainActivity extends AppCompatActivity {
                 fab_register.setVisibility(View.INVISIBLE);
             }
             else {
-                fab_menu.startAnimation(rotateForward);
-                fab_sos.startAnimation(fabClose);
-                fab_logout.startAnimation(fabClose);
-                fab_logout.setVisibility(View.INVISIBLE);
-                fab_sos.setVisibility(View.INVISIBLE);
-                if (Config.APP_TYPE == "1"){
-                    fab_children.setVisibility(View.INVISIBLE);
-                    fab_children.startAnimation(fabClose);
-                }
-                else if (Config.APP_TYPE == "2"){
-                    fab_profile.setVisibility(View.INVISIBLE);
-                    fab_profile.startAnimation(fabClose);
-                    fab_follow.setVisibility(View.INVISIBLE);
-                    fab_follow.startAnimation(fabClose);
+                mFirebaseDatabase = FirebaseDatabase.getInstance();
+                myRef = mFirebaseDatabase.getReference().child("Profile").child(user.getUid()).child("type");
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        Config.APP_TYPE = snapshot.getValue().toString();
+                        fab_menu.startAnimation(rotateForward);
+                        fab_sos.startAnimation(fabClose);
+                        fab_logout.startAnimation(fabClose);
+                        fab_logout.setVisibility(View.INVISIBLE);
+                        fab_sos.setVisibility(View.INVISIBLE);
+                        if (Config.APP_TYPE.equals("1")){
+                            fab_children.setVisibility(View.INVISIBLE);
+                            fab_children.startAnimation(fabClose);
+                        }
+                        else if (Config.APP_TYPE.equals("2")){
+                            fab_profile.setVisibility(View.INVISIBLE);
+                            fab_profile.startAnimation(fabClose);
+                            fab_follow.setVisibility(View.INVISIBLE);
+                            fab_follow.startAnimation(fabClose);
 
-                    fab_children.setVisibility(View.INVISIBLE);
-                    fab_children.startAnimation(fabClose);
-                }
-                else {
-                    fab_admin_map.setVisibility(View.INVISIBLE);
-                    fab_admin_map.startAnimation(fabClose);
-                    fab_driver_lists.startAnimation(fabClose);
-                    fab_driver_lists.setVisibility(View.INVISIBLE);
-                    fab_parent_lists.startAnimation(fabClose);
-                    fab_parent_lists.setVisibility(View.INVISIBLE);
-                    fab_parent_to_driver.startAnimation(fabClose);
-                    fab_parent_to_driver.setVisibility(View.INVISIBLE);
-                }
+                            fab_children.setVisibility(View.INVISIBLE);
+                            fab_children.startAnimation(fabClose);
+                        }
+                        else {
+                            fab_admin_map.setVisibility(View.INVISIBLE);
+                            fab_admin_map.startAnimation(fabClose);
+                            fab_driver_lists.startAnimation(fabClose);
+                            fab_driver_lists.setVisibility(View.INVISIBLE);
+                            fab_parent_lists.startAnimation(fabClose);
+                            fab_parent_lists.setVisibility(View.INVISIBLE);
+                            fab_parent_to_driver.startAnimation(fabClose);
+                            fab_parent_to_driver.setVisibility(View.INVISIBLE);
+                        }
 
-
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
             }
             isOpen = false;
         }
@@ -312,38 +348,51 @@ public class MainActivity extends AppCompatActivity {
                 fab_register.setVisibility(View.VISIBLE);
             }
             else {
-                fab_menu.startAnimation(rotateBackward);
+                mFirebaseDatabase = FirebaseDatabase.getInstance();
+                myRef = mFirebaseDatabase.getReference().child("Profile").child(user.getUid()).child("type");
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        Config.APP_TYPE = snapshot.getValue().toString();
+                        fab_menu.startAnimation(rotateBackward);
 
-                fab_sos.startAnimation(fabOpen);
-                fab_logout.startAnimation(fabOpen);
-                fab_logout.setVisibility(View.VISIBLE);
-                fab_sos.setVisibility(View.VISIBLE);
-                if (Config.APP_TYPE == "1"){
-                    fab_children.setVisibility(View.VISIBLE);
-                    fab_children.startAnimation(fabOpen);
-                }
+                        fab_sos.startAnimation(fabOpen);
+                        fab_logout.startAnimation(fabOpen);
+                        fab_logout.setVisibility(View.VISIBLE);
+                        fab_sos.setVisibility(View.VISIBLE);
+                        if (Config.APP_TYPE.equals("1")){
+                            fab_children.setVisibility(View.VISIBLE);
+                            fab_children.startAnimation(fabOpen);
+                        }
 
-                else if (Config.APP_TYPE == "2"){
-                    fab_profile.startAnimation(fabOpen);
-                    fab_profile.setVisibility(View.VISIBLE);
-                    fab_follow.startAnimation(fabOpen);
-                    fab_follow.setVisibility(View.VISIBLE);
+                        else if (Config.APP_TYPE.equals("2")){
+                            fab_profile.startAnimation(fabOpen);
+                            fab_profile.setVisibility(View.VISIBLE);
+                            fab_follow.startAnimation(fabOpen);
+                            fab_follow.setVisibility(View.VISIBLE);
 
-                    fab_children.setVisibility(View.VISIBLE);
-                    fab_children.startAnimation(fabOpen);
-                }
-                else{
-                    fab_admin_map.startAnimation(fabOpen);
-                    fab_admin_map.setVisibility(View.VISIBLE);
-                    fab_driver_lists.startAnimation(fabOpen);
-                    fab_driver_lists.setVisibility(View.VISIBLE);
-                    fab_parent_lists.startAnimation(fabOpen);
-                    fab_parent_lists.setVisibility(View.VISIBLE);
-                    fab_parent_to_driver.startAnimation(fabOpen);
-                    fab_parent_to_driver.setVisibility(View.VISIBLE);
-                }
+                            fab_children.setVisibility(View.VISIBLE);
+                            fab_children.startAnimation(fabOpen);
+                        }
+                        else{
+                            fab_admin_map.startAnimation(fabOpen);
+                            fab_admin_map.setVisibility(View.VISIBLE);
+                            fab_driver_lists.startAnimation(fabOpen);
+                            fab_driver_lists.setVisibility(View.VISIBLE);
+                            fab_parent_lists.startAnimation(fabOpen);
+                            fab_parent_lists.setVisibility(View.VISIBLE);
+                            fab_parent_to_driver.startAnimation(fabOpen);
+                            fab_parent_to_driver.setVisibility(View.VISIBLE);
+                        }
 
 
+
+
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
 
             }
             isOpen = true;

@@ -75,41 +75,45 @@ public class SOSFragment extends Fragment {
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                sosList = new ArrayList<SOS>();
-                mFirebaseDatabase = FirebaseDatabase.getInstance();
-                myRef = mFirebaseDatabase.getReference().child("SOS").child(snapshot.getValue().toString());
-                myRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot snapshot) {
-                        sosList.clear();
-                        ArrayList<StorageReference> storageReferences = new ArrayList<StorageReference>();
-                        for (DataSnapshot ds : snapshot.getChildren()) {
-                            FirebaseStorage storage = FirebaseStorage.getInstance();
-                            SOS destination = new SOS();
-                            destination.setDate(ds.child("date").getValue().toString());
-                            destination.setMessage(ds.child("message").getValue().toString());
+                try {
+                    sosList = new ArrayList<SOS>();
+                    mFirebaseDatabase = FirebaseDatabase.getInstance();
+                    myRef = mFirebaseDatabase.getReference().child("SOS").child(snapshot.getValue().toString());
+                    myRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot) {
+                            sosList.clear();
+                            ArrayList<StorageReference> storageReferences = new ArrayList<StorageReference>();
+                            for (DataSnapshot ds : snapshot.getChildren()) {
+                                FirebaseStorage storage = FirebaseStorage.getInstance();
+                                SOS destination = new SOS();
+                                destination.setDate(ds.child("date").getValue().toString());
+                                destination.setMessage(ds.child("message").getValue().toString());
 
-                            sosList.add(destination);
+                                sosList.add(destination);
+                            }
+
+                            sosAdapter = new SOSAdapter(sosList);
+                            sosAdapter.setContext(getContext());
+                            sosAdapter.notifyDataSetChanged();
+
+
+                            sosAdapter.setStorageReferences(storageReferences);
+
+                            RecyclerView rv = (RecyclerView) view.findViewById(R.id.lvSOS);
+
+                            rv.setAdapter(sosAdapter);
+                            LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+                            llm.setOrientation(LinearLayoutManager.VERTICAL);
+                            rv.setLayoutManager(llm);
                         }
 
-                        sosAdapter = new SOSAdapter(sosList);
-                        sosAdapter.setContext(getContext());
-                        sosAdapter.notifyDataSetChanged();
-
-
-                        sosAdapter.setStorageReferences(storageReferences);
-
-                        RecyclerView rv = (RecyclerView) view.findViewById(R.id.lvSOS);
-
-                        rv.setAdapter(sosAdapter);
-                        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-                        llm.setOrientation(LinearLayoutManager.VERTICAL);
-                        rv.setLayoutManager(llm);
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
+                }
+                catch (NullPointerException e){}
             }
 
             @Override

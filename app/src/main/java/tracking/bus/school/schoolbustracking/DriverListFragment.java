@@ -77,6 +77,20 @@ public class DriverListFragment extends Fragment implements PopupMenu.OnMenuItem
         btnBack = (Button) view.findViewById(R.id.btnBack);
 
 
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = mFirebaseDatabase.getReference().child("Profile").child(user.getUid()).child("type");
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Config.APP_TYPE = snapshot.getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+
         btnBack.setOnClickListener(new View.OnClickListener() {
                                        @Override
                                        public void onClick(View v) {
@@ -139,8 +153,8 @@ public class DriverListFragment extends Fragment implements PopupMenu.OnMenuItem
                         new RecyclerItemListener.RecyclerTouchListener() {
                             public void onClickItem(View v, int position) {
                                 final int samplePosition = position;
-                                System.out.println(Config.APP_TYPE);
-                                if (Config.APP_TYPE == "3"){
+
+                                if (Config.APP_TYPE.equals("3")){
                                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                     builder.setTitle("Input Capacity");
                                    View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.input_box_layout, (ViewGroup) getView(), false);
@@ -166,9 +180,7 @@ public class DriverListFragment extends Fragment implements PopupMenu.OnMenuItem
 
                                     builder.show();
                                 }
-                                else if (Config.APP_TYPE == "2"){
 
-                                }
                             }
 
                             public void onLongClickItem(View v, int position) {

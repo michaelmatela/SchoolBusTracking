@@ -95,7 +95,10 @@ public class AddChildFragment extends Fragment {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                count =  snapshot.child("number_of_child").getValue().toString();
+                try {
+                    count = snapshot.child("number_of_child").getValue().toString();
+                }
+                catch(NullPointerException e){count = "0";}
             }
 
             @Override

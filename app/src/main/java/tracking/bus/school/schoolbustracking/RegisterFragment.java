@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
@@ -40,6 +41,7 @@ public class RegisterFragment extends Fragment {
     private FirebaseAuth fireBaseAuth;
     private ProgressDialog progressDialog;
 
+    Spinner spinner;
     Button backButton;
     Button registerButton;
     EditText etFullName;
@@ -52,6 +54,7 @@ public class RegisterFragment extends Fragment {
     String email;
     String password;
     String rePassword;
+    String userAccess;
     FloatingActionButton fab_menu;
 
     private FirebaseDatabase mFirebaseDatabase;
@@ -106,12 +109,24 @@ ivPic = (ImageView) view.findViewById(R.id.ivPic);
         etFullName = (EditText) view.findViewById(R.id.etFullName);
         etPassword = (EditText) view.findViewById(R.id.etPassword);
         etRePassword = (EditText) view.findViewById(R.id.etRePassword);
+        spinner = (Spinner) view.findViewById(R.id.spinner);
 
         email = etEmail.getText().toString();
         fullName = etFullName.getText().toString();
         password = etPassword.getText().toString();
         rePassword = etRePassword.getText().toString();
+        userAccess = spinner.getSelectedItem().toString();
 
+        if (userAccess.equals("Admin"))
+            userAccess = "3";
+        else if(userAccess.equals("Driver"))
+            userAccess = "1";
+        else if(userAccess.equals("Parent"))
+            userAccess = "2";
+        else {
+            Toast.makeText(getActivity(), "Please choose desired user access.", Toast.LENGTH_LONG).show();
+            return;
+        }
         if(email.isEmpty() || fullName.isEmpty() || password.isEmpty() || rePassword.isEmpty()){
             Toast.makeText(getActivity(), "Please fill required fields.", Toast.LENGTH_LONG).show();
         } else{
@@ -145,7 +160,7 @@ ivPic = (ImageView) view.findViewById(R.id.ivPic);
                                                             profile.setFullName(fullName);
                                                             profile.setEmail(email);
                                                             profile.setPassword(password);
-                                                            profile.setType(Config.APP_TYPE);
+                                                            profile.setType(userAccess);
 
                                                             ref.child("Profile").child(user.getUid()).setValue(profile);
 
