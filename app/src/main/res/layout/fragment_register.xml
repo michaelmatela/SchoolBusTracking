@@ -39,6 +39,22 @@
                 android:id="@+id/etFullName" />
 
             <TextView
+                android:text="Full Name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:id="@+id/textView22" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:text=""
+                android:ems="10"
+                android:textSize="20dp"
+                android:id="@+id/etPhoneNumber" />
+
+            <TextView
                 android:text="Email Address/Username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

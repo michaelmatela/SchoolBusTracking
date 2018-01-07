@@ -45,12 +45,14 @@ public class RegisterFragment extends Fragment {
     Button backButton;
     Button registerButton;
     EditText etFullName;
+    EditText etPhoneNumber;
     EditText etEmail;
     EditText etPassword;
     EditText etRePassword;
     ImageView ivPic;
 
     String fullName;
+    String phoneNumber;
     String email;
     String password;
     String rePassword;
@@ -107,12 +109,14 @@ ivPic = (ImageView) view.findViewById(R.id.ivPic);
     public void register(View view){
         etEmail = (EditText) view.findViewById(R.id.etEmail);
         etFullName = (EditText) view.findViewById(R.id.etFullName);
+        etPhoneNumber = (EditText) view.findViewById(R.id.etPhoneNumber);
         etPassword = (EditText) view.findViewById(R.id.etPassword);
         etRePassword = (EditText) view.findViewById(R.id.etRePassword);
         spinner = (Spinner) view.findViewById(R.id.spinner);
 
         email = etEmail.getText().toString();
         fullName = etFullName.getText().toString();
+        phoneNumber = etPhoneNumber.getText().toString();
         password = etPassword.getText().toString();
         rePassword = etRePassword.getText().toString();
         userAccess = spinner.getSelectedItem().toString();
@@ -127,7 +131,7 @@ ivPic = (ImageView) view.findViewById(R.id.ivPic);
             Toast.makeText(getActivity(), "Please choose desired user access.", Toast.LENGTH_LONG).show();
             return;
         }
-        if(email.isEmpty() || fullName.isEmpty() || password.isEmpty() || rePassword.isEmpty()){
+        if(email.isEmpty() || fullName.isEmpty() || password.isEmpty() || rePassword.isEmpty() || phoneNumber.isEmpty()){
             Toast.makeText(getActivity(), "Please fill required fields.", Toast.LENGTH_LONG).show();
         } else{
             if (!password.equals(rePassword))
@@ -158,6 +162,7 @@ ivPic = (ImageView) view.findViewById(R.id.ivPic);
                                                             Profile profile = new Profile();
 
                                                             profile.setFullName(fullName);
+                                                            profile.setPhoneNumber(phoneNumber);
                                                             profile.setEmail(email);
                                                             profile.setPassword(password);
                                                             profile.setType(userAccess);

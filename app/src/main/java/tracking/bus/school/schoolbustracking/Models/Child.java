@@ -8,11 +8,21 @@ public class Child {
     private String name;
     private String parent;
     private String driver;
+    private String gender;
+    private String age;
     private String status;
 
     public Child(){
 
     }
+
+    public String getGender() { return gender;}
+
+    public void setGender(String gender) { this.gender = gender; }
+
+    public String getAge() { return age; }
+
+    public void setAge(String age) { this.age = age; }
 
     public String getStatus() {return status;}
 

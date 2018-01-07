@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.google.firebase.storage.StorageReference;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +34,8 @@ public class ParentAdapter
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tvFullName;
         public TextView tvEmail;
+        public TextView tvPhoneNumber;
+        public TextView tvAssignee;
 
         public TextView tvChild;
 
@@ -42,9 +46,10 @@ public class ParentAdapter
 
             tvFullName = (TextView) view.findViewById(R.id.tvFullName);
             tvEmail = (TextView) view.findViewById(R.id.tvEmail);
-
+            tvPhoneNumber = (TextView) view.findViewById(R.id.tvPhoneNumber);
             tvId = (TextView) view.findViewById(R.id.tvId);
             tvChild = (TextView) view.findViewById(R.id.tvChild);
+            tvAssignee = (TextView) view.findViewById(R.id.tvAssignee);
         }
     }
 
@@ -58,7 +63,8 @@ public class ParentAdapter
         holder.tvFullName.setText(d.getFullName());
         holder.tvEmail.setText(d.getEmail());
         holder.tvChild.setText(d.getNumber_of_child());
-
+        holder.tvPhoneNumber.setText(d.getPhoneNumber());
+        holder.tvAssignee.setText(d.getAssignee());
     }
 
     @Override

@@ -122,6 +122,7 @@ public class DriverListFragment extends Fragment implements PopupMenu.OnMenuItem
                         driver.setId(ds.getKey().toString());
                         driver.setPassword(ds.child("email").getValue().toString());
                         driver.setType(ds.child("type").getValue().toString());
+                        driver.setPhoneNumber(ds.child("phoneNumber").getValue().toString());
 
                         try {
                             driver.setCapacity(ds.child("capacity").getValue().toString());

@@ -40,6 +40,8 @@ public class DriverAdapter
         public TextView tvCapacity;
         public TextView tvCurrent;
 
+        public TextView tvPhoneNumber;
+
         public TextView tvId;
 
         public MyViewHolder(View view){
@@ -47,7 +49,7 @@ public class DriverAdapter
 
             tvFullName = (TextView) view.findViewById(R.id.tvFullName);
             tvEmail = (TextView) view.findViewById(R.id.tvEmail);
-
+            tvPhoneNumber = (TextView) view.findViewById(R.id.tvPhoneNumber);
             tvId = (TextView) view.findViewById(R.id.tvId);
             tvCapacity = (TextView) view.findViewById(R.id.tvCapacity);
 
@@ -66,6 +68,7 @@ public class DriverAdapter
         holder.tvEmail.setText(d.getEmail());
         holder.tvCapacity.setText(d.getCapacity());
         holder.tvCurrent.setText(d.getCurrent());
+        holder.tvPhoneNumber.setText(d.getPhoneNumber());
     }
 
     @Override

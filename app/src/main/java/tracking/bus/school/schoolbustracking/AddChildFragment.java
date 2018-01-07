@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
@@ -43,6 +45,9 @@ public class AddChildFragment extends Fragment {
     Button btnAdd;
     Button btnBack;
     ImageView ivPic;
+    RadioGroup rgGender;
+    RadioButton rbGender;
+    EditText etAge;
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myRef;
@@ -55,6 +60,8 @@ public class AddChildFragment extends Fragment {
     String parent;
     String driver;
     String count;
+    String age;
+    String gender;
     String currentChildren;
     FloatingActionButton fab_menu;
 
@@ -188,6 +195,12 @@ public class AddChildFragment extends Fragment {
     private void addChild(){
         etName = (EditText) view.findViewById(R.id.etName);
         name = etName.getText().toString();
+        rgGender = (RadioGroup) view.findViewById(R.id.rgGender);
+        etAge = (EditText) view.findViewById(R.id.etAge);
+        rbGender = (RadioButton) view.findViewById(rgGender.getCheckedRadioButtonId());
+        gender = rbGender.getText().toString();
+        age = etAge.getText().toString();
+
 
         if (Integer.parseInt(count) >= (Integer.parseInt(currentChildren) + 1)) {
             if (!driver.isEmpty()) {
@@ -199,6 +212,8 @@ public class AddChildFragment extends Fragment {
                         destination.setName(name);
                         destination.setParent(parent);
                         destination.setDriver(driver);
+                        destination.setAge(age);
+                        destination.setGender(gender);
                         destination.setStatus("Home");
 
                         ref.child("Children").child(name).setValue(destination);

@@ -122,6 +122,14 @@ public class ParentListFragment extends Fragment implements PopupMenu.OnMenuItem
                         driver.setId(ds.getKey().toString());
                         driver.setPassword(ds.child("email").getValue().toString());
                         driver.setType(ds.child("type").getValue().toString());
+                        driver.setPhoneNumber(ds.child("phoneNumber").getValue().toString());
+
+                        try{
+                            driver.setAssignee(ds.child("assignee").getValue().toString());
+                        }
+                        catch (NullPointerException e){
+                            driver.setAssignee("Not assigned.");
+                        }
 
                         try {
                             driver.setNumber_of_child(ds.child("number_of_child").getValue().toString());

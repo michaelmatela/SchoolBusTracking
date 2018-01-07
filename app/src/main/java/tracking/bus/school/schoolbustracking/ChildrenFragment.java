@@ -46,6 +46,7 @@ public class ChildrenFragment extends Fragment implements PopupMenu.OnMenuItemCl
     Button btnBack;
     Button btnAdd;
 
+
     ChildAdapter childAdapter;
     ArrayList<Child> children;
 
@@ -138,6 +139,8 @@ public class ChildrenFragment extends Fragment implements PopupMenu.OnMenuItemCl
                     destination.setName(ds.child("name").getValue().toString());
                     destination.setParent(ds.child("parent").getValue().toString());
                     destination.setStatus(ds.child("status").getValue().toString());
+                    destination.setAge(ds.child("age").getValue().toString());
+                    destination.setGender(ds.child("gender").getValue().toString());
 
                     try{
                         destination.setDriver(ds.child("driver").getValue().toString());

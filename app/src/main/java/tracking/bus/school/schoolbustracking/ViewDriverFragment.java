@@ -55,9 +55,11 @@ public class ViewDriverFragment extends Fragment {
     TextView tvEmail;
     TextView tvCapacity;
     TextView tvCurrent;
+    TextView tvPhoneNumber;
 
     String driverId;
     String parent;
+    String phoneNumber;
     FloatingActionButton fab_menu;
 
     @Override
@@ -97,6 +99,7 @@ public class ViewDriverFragment extends Fragment {
             public void onDataChange(DataSnapshot snapshot) {
                 tvFullName.setText(snapshot.child("fullName").getValue().toString());
                 tvEmail.setText(snapshot.child("email").getValue().toString());
+                tvPhoneNumber.setText(snapshot.child("phoneNumber").getValue().toString());
                 try {
                     tvCapacity.setText(snapshot.child("capacity").getValue().toString());
                     tvCurrent.setText(snapshot.child("current").getValue().toString());

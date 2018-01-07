@@ -127,6 +127,7 @@ public class DriverList2Fragment extends Fragment implements PopupMenu.OnMenuIte
                         driver.setId(ds.getKey().toString());
                         driver.setPassword(ds.child("email").getValue().toString());
                         driver.setType(ds.child("type").getValue().toString());
+                        driver.setPhoneNumber(ds.child("phoneNumber").getValue().toString());
 
                         try {
                             driver.setCapacity(ds.child("capacity").getValue().toString());
@@ -206,12 +207,13 @@ public class DriverList2Fragment extends Fragment implements PopupMenu.OnMenuIte
 
     private void addChild(Profile profile){
 
-                Firebase ref = new Firebase(Config.FIREBASE_URL);
-                ref.child("Profile").child(profile.getId()).setValue(profile);
-                ref.child("ParentDriver").child(parent_id).setValue(profile.getId());
-                Toast.makeText(getActivity(), "Parent is now set to this driver", Toast.LENGTH_LONG).show();
+        Firebase ref = new Firebase(Config.FIREBASE_URL);
+        ref.child("Profile").child(profile.getId()).setValue(profile);
+        ref.child("ParentDriver").child(parent_id).setValue(profile.getId());
+        Toast.makeText(getActivity(), "Parent is now set to this driver", Toast.LENGTH_LONG).show();
 
-
+        ref = new Firebase(Config.FIREBASE_URL);
+        ref.child("Profile").child((parent_id)).child("assignee").setValue(profile.getFullName());
     }
 
     public void removeFragment(){

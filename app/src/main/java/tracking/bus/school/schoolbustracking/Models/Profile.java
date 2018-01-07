@@ -11,12 +11,21 @@ public class Profile {
     private String type;
     private String capacity;
     private String current;
+    private String phoneNumber;
     private String number_of_child;
+    private String assignee;
     private String id;
 
     public Profile (){
 
     }
+
+    public String getAssignee() { return assignee; }
+
+    public void setAssignee(String assignee) { this.assignee = assignee; }
+    public String getPhoneNumber() { return phoneNumber; }
+
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }

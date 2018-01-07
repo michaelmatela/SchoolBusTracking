@@ -29,7 +29,13 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -44,6 +50,9 @@ public class ParentMapsActivity extends FragmentActivity implements OnMapReadyCa
     Button btnBack;
 
 
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference myRef;
+
     private FirebaseUser user;
     private FirebaseAuth mAuth;
 
@@ -54,6 +63,10 @@ public class ParentMapsActivity extends FragmentActivity implements OnMapReadyCa
     LatLng latLng;
     MarkerOptions markerOptions;
     String addressText;
+
+    String g;
+    String latitude;
+    String longtitude;
 
     String parentId;
     LocationManager locationManager;
@@ -100,21 +113,43 @@ public class ParentMapsActivity extends FragmentActivity implements OnMapReadyCa
             @Override
             public void onClick(View v) {
 
-                String g = etSearch.getText().toString();
+                g = etSearch.getText().toString().toLowerCase();
 
-                Geocoder geocoder = new Geocoder(getBaseContext());
-                List<Address> addresses = null;
 
-                try {
-                    // Getting a maximum of 3 Address that matches the input
-                    // text
-                    addresses = geocoder.getFromLocationName(g, 3);
-                    if (addresses != null && !addresses.equals(""))
-                        search(addresses);
+                mFirebaseDatabase = FirebaseDatabase.getInstance();
+                myRef = mFirebaseDatabase.getReference().child("MapLocation").child(g);
+                myRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        if (snapshot.hasChild("latitude") && snapshot.hasChild("longtitude")) {
+                            latitude = snapshot.child("latitude").getValue().toString();
+                            longtitude = snapshot.child("longtitude").getValue().toString();
 
-                } catch (Exception e) {
 
-                }
+                            search2(Double.parseDouble(latitude),Double.parseDouble(longtitude));
+                        }
+                        else{
+                            Geocoder geocoder = new Geocoder(getBaseContext());
+                            List<Address> addresses = null;
+
+                            try {
+                                // Getting a maximum of 3 Address that matches the input
+                                // text
+                                addresses = geocoder.getFromLocationName(g, 3);
+                                if (addresses != null && !addresses.equals(""))
+                                    search(addresses);
+
+                            } catch (Exception e) {
+
+                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
 
             }
         });
@@ -223,6 +258,27 @@ public class ParentMapsActivity extends FragmentActivity implements OnMapReadyCa
         addressText = String.format(
                 "%s, %s",
                 etSearch.getText().toString(), address.getCountryName());
+
+        markerOptions = new MarkerOptions();
+
+        markerOptions.position(latLng);
+        markerOptions.title(addressText);
+
+        mMap.clear();
+        mMap.addMarker(markerOptions).showInfoWindow();
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+    }
+
+    protected void search2(Double latitude, Double longtitude) {
+
+        home_long = longtitude;
+        home_lat = latitude;
+        latLng = new LatLng(latitude, longtitude);
+
+        addressText = String.format(
+                "%s",
+                etSearch.getText().toString());
 
         markerOptions = new MarkerOptions();
 

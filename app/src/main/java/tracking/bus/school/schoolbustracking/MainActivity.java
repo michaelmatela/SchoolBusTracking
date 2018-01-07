@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
             if (Config.APP_TYPE.equals("3"))
                 setTitle("Servisibility (Admin)");
             else if (Config.APP_TYPE.equals("2"))
-                setTitle("Servisibility (Parent)");
+                setTitle("Servisibility (Guardian)");
             else if (Config.APP_TYPE.equals("1"))
                 setTitle("Servisibility (Driver)");
         }

@@ -41,6 +41,8 @@ public class ChildAdapter
         public TextView tvDriver;
         public ImageView ivPic;
         public TextView tvStatus;
+        public TextView tvAge;
+        public TextView tvGender;
 
         public MyViewHolder(View view){
             super(view);
@@ -49,6 +51,8 @@ public class ChildAdapter
             tvDriver = (TextView) view.findViewById(R.id.tvDriver);
             ivPic = (ImageView) view.findViewById(R.id.ivPic);
             tvStatus = (TextView) view.findViewById(R.id.tvStatus);
+            tvAge = (TextView) view.findViewById(R.id.tvAge);
+            tvGender = (TextView) view.findViewById(R.id.tvGender);
         }
     }
 
@@ -64,6 +68,8 @@ public class ChildAdapter
         holder.tvParent.setText(d.getParent());
         holder.tvDriver.setText(d.getDriver());
         holder.tvStatus.setText(d.getStatus());
+        holder.tvAge.setText(d.getAge());
+        holder.tvGender.setText(d.getGender());
 
         Glide.with(this.context)
                 .using(new FirebaseImageLoader())
