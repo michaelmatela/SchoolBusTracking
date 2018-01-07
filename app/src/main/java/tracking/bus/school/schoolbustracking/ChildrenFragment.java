@@ -49,6 +49,8 @@ public class ChildrenFragment extends Fragment implements PopupMenu.OnMenuItemCl
 
     ChildAdapter childAdapter;
     ArrayList<Child> children;
+    String age;
+    String gender;
 
     String parentId;
 
@@ -195,6 +197,8 @@ public class ChildrenFragment extends Fragment implements PopupMenu.OnMenuItemCl
                                     parentId = ((TextView) v.findViewById(R.id.tvParent)).getText().toString();
                                     driverId = ((TextView) v.findViewById(R.id.tvDriver)).getText().toString();
                                     childName = ((TextView) v.findViewById(R.id.tvName)).getText().toString();
+                                    age = ((TextView) v.findViewById(R.id.tvAge)).getText().toString();
+                                    gender = ((TextView) v.findViewById(R.id.tvGender)).getText().toString();
 
                                 }
                                 else if (Config.APP_TYPE == "2"){
@@ -240,6 +244,8 @@ public class ChildrenFragment extends Fragment implements PopupMenu.OnMenuItemCl
                 destination.setName(childName);
                 destination.setParent(parentId);
                 destination.setDriver(driverId);
+                destination.setAge(age);
+                destination.setGender(gender);
                 destination.setStatus("School Bus");
 
                 ref.child("Children").child(childName).setValue(destination);
@@ -251,6 +257,8 @@ public class ChildrenFragment extends Fragment implements PopupMenu.OnMenuItemCl
                 destination.setName(childName);
                 destination.setParent(parentId);
                 destination.setDriver(driverId);
+                destination.setAge(age);
+                destination.setGender(gender);
                 destination.setStatus("Home");
 
                 ref.child("Children").child(childName).setValue(destination);
@@ -261,6 +269,8 @@ public class ChildrenFragment extends Fragment implements PopupMenu.OnMenuItemCl
                 destination.setName(childName);
                 destination.setParent(parentId);
                 destination.setDriver(driverId);
+                destination.setAge(age);
+                destination.setGender(gender);
                 destination.setStatus("School");
 
                 ref.child("Children").child(childName).setValue(destination);

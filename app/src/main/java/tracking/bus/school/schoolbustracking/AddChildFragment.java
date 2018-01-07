@@ -205,31 +205,36 @@ public class AddChildFragment extends Fragment {
         if (Integer.parseInt(count) >= (Integer.parseInt(currentChildren) + 1)) {
             if (!driver.isEmpty()) {
                 if (!name.isEmpty()) {
-                    if (ivPic.getTag() != null) {
-                        Firebase ref = new Firebase(Config.FIREBASE_URL);
-                        Child destination = new Child();
+                    if(!age.isEmpty()){
+                        if (ivPic.getTag() != null) {
+                            Firebase ref = new Firebase(Config.FIREBASE_URL);
+                            Child destination = new Child();
 
-                        destination.setName(name);
-                        destination.setParent(parent);
-                        destination.setDriver(driver);
-                        destination.setAge(age);
-                        destination.setGender(gender);
-                        destination.setStatus("Home");
+                            destination.setName(name);
+                            destination.setParent(parent);
+                            destination.setDriver(driver);
+                            destination.setAge(age);
+                            destination.setGender(gender);
+                            destination.setStatus("Home");
 
-                        ref.child("Children").child(name).setValue(destination);
+                            ref.child("Children").child(name).setValue(destination);
 
-                        String path = ivPic.getTag().toString();
-                        Uri uri = Uri.parse(path);
-                        FirebaseStorage storage = FirebaseStorage.getInstance();
-                        StorageReference storageRef = storage.getReference().child("Children").child(name);
-                        storageRef.putFile(uri);
+                            String path = ivPic.getTag().toString();
+                            Uri uri = Uri.parse(path);
+                            FirebaseStorage storage = FirebaseStorage.getInstance();
+                            StorageReference storageRef = storage.getReference().child("Children").child(name);
+                            storageRef.putFile(uri);
 
 
-                        Toast.makeText(getActivity(), "Add child successful.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "Add child successful.", Toast.LENGTH_LONG).show();
 
-                        etName.setText("");
+                            etName.setText("");
+                        }
+                        else{
+                            Toast.makeText(getActivity(), "Please choose a photo for this child", Toast.LENGTH_LONG).show();
+                        }
                     } else {
-                        Toast.makeText(getActivity(), "Please choose a photo for this child", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Please fill age field", Toast.LENGTH_LONG).show();
                     }
                 } else {
                     Toast.makeText(getActivity(), "Please fill name field.", Toast.LENGTH_LONG).show();

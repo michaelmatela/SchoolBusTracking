@@ -74,6 +74,7 @@ public class ViewDriverFragment extends Fragment {
         tvEmail = (TextView) view.findViewById(R.id.tvEmail);
         tvCapacity = (TextView) view.findViewById(R.id.tvCapacity);
         tvCurrent = (TextView) view.findViewById(R.id.tvCurrent);
+        tvPhoneNumber = (TextView) view.findViewById(R.id.tvPhoneNumber);
         Bundle args = getArguments();
         driverId = args.getString("driverId", "");
         fab_menu = (FloatingActionButton) getActivity().findViewById(R.id.fab_menu);
