@@ -11,10 +11,20 @@ public class Child {
     private String gender;
     private String age;
     private String status;
+    private String timeIn;
+    private String timeOut;
 
     public Child(){
 
     }
+
+    public String getTimeIn() { return timeIn; }
+
+    public void setTimeIn(String timeIn) { this.timeIn = timeIn; }
+
+    public String getTimeOut() { return timeOut; }
+
+    public void setTimeOut(String timeOut) { this.timeOut = timeOut; }
 
     public String getGender() { return gender;}
 

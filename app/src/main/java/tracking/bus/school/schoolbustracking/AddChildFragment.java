@@ -48,6 +48,8 @@ public class AddChildFragment extends Fragment {
     RadioGroup rgGender;
     RadioButton rbGender;
     EditText etAge;
+    EditText etTimeIn;
+    EditText etTimeOut;
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myRef;
@@ -64,6 +66,8 @@ public class AddChildFragment extends Fragment {
     String gender;
     String currentChildren;
     FloatingActionButton fab_menu;
+    String timeIn;
+    String timeOut;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -200,47 +204,61 @@ public class AddChildFragment extends Fragment {
         rbGender = (RadioButton) view.findViewById(rgGender.getCheckedRadioButtonId());
         gender = rbGender.getText().toString();
         age = etAge.getText().toString();
+        etTimeIn = (EditText) view.findViewById(R.id.etTimeIn);
+        etTimeOut = (EditText) view.findViewById(R.id.etTimeOut);
+        timeIn = etTimeIn.getText().toString();
+        timeOut = etTimeOut.getText().toString();
 
 
         if (Integer.parseInt(count) >= (Integer.parseInt(currentChildren) + 1)) {
-            if (!driver.isEmpty()) {
-                if (!name.isEmpty()) {
-                    if(!age.isEmpty()){
-                        if (ivPic.getTag() != null) {
-                            Firebase ref = new Firebase(Config.FIREBASE_URL);
-                            Child destination = new Child();
+            if (!timeOut.isEmpty()) {
+                if (!timeIn.isEmpty()) {
+                    if (!driver.isEmpty()) {
+                        if (!name.isEmpty()) {
+                            if (!age.isEmpty()) {
+                                if (ivPic.getTag() != null) {
+                                    Firebase ref = new Firebase(Config.FIREBASE_URL);
+                                    Child destination = new Child();
 
-                            destination.setName(name);
-                            destination.setParent(parent);
-                            destination.setDriver(driver);
-                            destination.setAge(age);
-                            destination.setGender(gender);
-                            destination.setStatus("Home");
+                                    destination.setName(name);
+                                    destination.setParent(parent);
+                                    destination.setDriver(driver);
+                                    destination.setAge(age);
+                                    destination.setGender(gender);
+                                    destination.setStatus("Home");
+                                    destination.setTimeIn(timeIn);
+                                    destination.setTimeOut(timeOut);
 
-                            ref.child("Children").child(name).setValue(destination);
+                                    ref.child("Children").child(name).setValue(destination);
 
-                            String path = ivPic.getTag().toString();
-                            Uri uri = Uri.parse(path);
-                            FirebaseStorage storage = FirebaseStorage.getInstance();
-                            StorageReference storageRef = storage.getReference().child("Children").child(name);
-                            storageRef.putFile(uri);
+                                    String path = ivPic.getTag().toString();
+                                    Uri uri = Uri.parse(path);
+                                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                                    StorageReference storageRef = storage.getReference().child("Children").child(name);
+                                    storageRef.putFile(uri);
 
 
-                            Toast.makeText(getActivity(), "Add child successful.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(), "Add child successful.", Toast.LENGTH_LONG).show();
 
-                            etName.setText("");
-                        }
-                        else{
-                            Toast.makeText(getActivity(), "Please choose a photo for this child", Toast.LENGTH_LONG).show();
+                                    etName.setText("");
+                                } else {
+                                    Toast.makeText(getActivity(), "Please choose a photo for this child", Toast.LENGTH_LONG).show();
+                                }
+                            } else {
+                                Toast.makeText(getActivity(), "Please fill age field", Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Toast.makeText(getActivity(), "Please fill name field.", Toast.LENGTH_LONG).show();
                         }
                     } else {
-                        Toast.makeText(getActivity(), "Please fill age field", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Please contact admin first to continue.", Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(getActivity(), "Please fill name field.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Please fill time in field.", Toast.LENGTH_LONG).show();
                 }
-            } else {
-                Toast.makeText(getActivity(), "Please contact admin first to continue.", Toast.LENGTH_LONG).show();
+            }
+            else {
+                Toast.makeText(getActivity(), "Please fill time out field.", Toast.LENGTH_LONG).show();
             }
         }
         else{

@@ -124,6 +124,8 @@ public class Children2Fragment extends Fragment implements PopupMenu.OnMenuItemC
                     destination.setStatus(ds.child("status").getValue().toString());
                     destination.setAge(ds.child("age").getValue().toString());
                     destination.setGender(ds.child("gender").getValue().toString());
+                    destination.setTimeIn(ds.child("timeIn").getValue().toString());
+                    destination.setTimeOut(ds.child("timeOut").getValue().toString());
 
                     try{
                         destination.setDriver(ds.child("driver").getValue().toString());

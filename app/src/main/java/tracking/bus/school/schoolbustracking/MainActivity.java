@@ -89,6 +89,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 animateFab();
+                try{
+                    if (Config.APP_TYPE.equals("3"))
+                        setTitle("Servisibility (Admin)");
+                    else if (Config.APP_TYPE.equals("2"))
+                        setTitle("Servisibility (Guardian)");
+                    else if (Config.APP_TYPE.equals("1"))
+                        setTitle("Servisibility (Driver)");
+                }
+                catch (NullPointerException e){setTitle("Servisibility");}
             }
         });
 
@@ -228,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
                 animateFab();
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                RegisterFragment registerFragment = new RegisterFragment();
+                PolicyFragment registerFragment = new PolicyFragment();
                 fragmentTransaction.replace(R.id.fragment_container, registerFragment);
                 fragmentTransaction.commit();
                 mainGone();

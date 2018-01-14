@@ -43,6 +43,8 @@ public class ChildAdapter
         public TextView tvStatus;
         public TextView tvAge;
         public TextView tvGender;
+        public TextView tvTimeIn;
+        public TextView tvTimeOut;
 
         public MyViewHolder(View view){
             super(view);
@@ -53,6 +55,8 @@ public class ChildAdapter
             tvStatus = (TextView) view.findViewById(R.id.tvStatus);
             tvAge = (TextView) view.findViewById(R.id.tvAge);
             tvGender = (TextView) view.findViewById(R.id.tvGender);
+            tvTimeIn = (TextView) view.findViewById(R.id.tvTimeIn);
+            tvTimeOut = (TextView) view.findViewById(R.id.tvTimeOut);
         }
     }
 
@@ -70,6 +74,8 @@ public class ChildAdapter
         holder.tvStatus.setText(d.getStatus());
         holder.tvAge.setText(d.getAge());
         holder.tvGender.setText(d.getGender());
+        holder.tvTimeIn.setText(d.getTimeIn());
+        holder.tvTimeOut.setText(d.getTimeOut());
 
         Glide.with(this.context)
                 .using(new FirebaseImageLoader())

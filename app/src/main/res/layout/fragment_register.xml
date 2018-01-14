@@ -39,7 +39,7 @@
                 android:id="@+id/etFullName" />
 
             <TextView
-                android:text="Full Name"
+                android:text="Contact Number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20dp"

@@ -1,0 +1,52 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background_solid"
+    tools:context="tracking.bus.school.schoolbustracking.PolicyFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:text="you may be assured that Servisibility will:\n\n1. Not sell student information;\n2. Not build a personal profile of a student other than for supporting authorized educational/school \npurposes or as authorized by the parent/student;\n3. Not behaviorally target advertising;\n4. Use data for authorized education purposes only;\n5. Not knowingly retain student personal information beyond the time period required to support\n the authorized educational/school purposes, or as authorized by the parent/student;\n6. Support parental access to, and correction of errors in, their children’s information;" />
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="I agree." />
+
+
+    <Button
+        android:id="@+id/btnContinue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:backgroundTint="#ffe680"
+        android:enabled="false"
+        android:text="Continue" />
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:backgroundTint="#ffe680"
+        android:text="Back" />
+
+</LinearLayout>
+
+</ScrollView>
+
+</LinearLayout>

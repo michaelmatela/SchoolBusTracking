@@ -63,6 +63,8 @@ public class ChildrenFragment extends Fragment implements PopupMenu.OnMenuItemCl
 
     String driverId;
     String childName;
+    String timeIn;
+    String timeOut;
     FloatingActionButton fab_menu;
 
     public ChildrenFragment() {
@@ -143,6 +145,8 @@ public class ChildrenFragment extends Fragment implements PopupMenu.OnMenuItemCl
                     destination.setStatus(ds.child("status").getValue().toString());
                     destination.setAge(ds.child("age").getValue().toString());
                     destination.setGender(ds.child("gender").getValue().toString());
+                    destination.setTimeIn(ds.child("timeIn").getValue().toString());
+                    destination.setTimeOut(ds.child("timeOut").getValue().toString());
 
                     try{
                         destination.setDriver(ds.child("driver").getValue().toString());
@@ -199,7 +203,8 @@ public class ChildrenFragment extends Fragment implements PopupMenu.OnMenuItemCl
                                     childName = ((TextView) v.findViewById(R.id.tvName)).getText().toString();
                                     age = ((TextView) v.findViewById(R.id.tvAge)).getText().toString();
                                     gender = ((TextView) v.findViewById(R.id.tvGender)).getText().toString();
-
+                                    timeIn = ((TextView) v.findViewById(R.id.tvTimeIn)).getText().toString();
+                                    timeOut = ((TextView) v.findViewById(R.id.tvTimeOut)).getText().toString();
                                 }
                                 else if (Config.APP_TYPE == "2"){
 
@@ -246,6 +251,8 @@ public class ChildrenFragment extends Fragment implements PopupMenu.OnMenuItemCl
                 destination.setDriver(driverId);
                 destination.setAge(age);
                 destination.setGender(gender);
+                destination.setTimeIn(timeIn);
+                destination.setTimeOut(timeOut);
                 destination.setStatus("School Bus");
 
                 ref.child("Children").child(childName).setValue(destination);
@@ -259,6 +266,8 @@ public class ChildrenFragment extends Fragment implements PopupMenu.OnMenuItemCl
                 destination.setDriver(driverId);
                 destination.setAge(age);
                 destination.setGender(gender);
+                destination.setTimeIn(timeIn);
+                destination.setTimeOut(timeOut);
                 destination.setStatus("Home");
 
                 ref.child("Children").child(childName).setValue(destination);
@@ -271,6 +280,8 @@ public class ChildrenFragment extends Fragment implements PopupMenu.OnMenuItemCl
                 destination.setDriver(driverId);
                 destination.setAge(age);
                 destination.setGender(gender);
+                destination.setTimeIn(timeIn);
+                destination.setTimeOut(timeOut);
                 destination.setStatus("School");
 
                 ref.child("Children").child(childName).setValue(destination);
