@@ -1,3 +1,7 @@
+Application Screenshot
+
+https://imgur.com/a/VN8Mu
+
 HomePage
 1. Homepage shows the two icon which is the Create new user and log-in button for existing User.
 2. The new user need to agree first about the Policy or Agreement of the application. 
