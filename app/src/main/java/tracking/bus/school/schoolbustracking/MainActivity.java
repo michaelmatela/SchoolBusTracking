@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseUser user;
     private FirebaseAuth mAuth;
-    FloatingActionButton fab_menu, fab_sos, fab_profile, fab_login, fab_register, fab_logout, fab_children, fab_follow, fab_admin_map, fab_driver_lists, fab_parent_lists, fab_parent_to_driver;
+    FloatingActionButton fab_home_info, fab_menu, fab_sos, fab_profile, fab_login, fab_register, fab_logout, fab_children, fab_follow, fab_admin_map, fab_driver_lists, fab_parent_lists, fab_parent_to_driver;
     Animation fabOpen, fabClose, rotateForward, rotateBackward;
     boolean isOpen = false;
     String login = "";
@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         }
         catch (NullPointerException e){setTitle("Servisibility");}
 
+        fab_home_info = (FloatingActionButton) findViewById(R.id.fab_home_info);
         fab_menu = (FloatingActionButton) findViewById(R.id.fab_menu);
         fab_profile = (FloatingActionButton) findViewById(R.id.fab_profile);
         fab_sos = (FloatingActionButton) findViewById(R.id.fab_sos);
@@ -101,6 +102,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        fab_home_info.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                if (Config.APP_TYPE.equals("1")) {
+                    Intent intent = new Intent(MainActivity.this, DriverInfoActivity.class);
+                    MainActivity.this.startActivity(intent);
+                }
+                else if (Config.APP_TYPE.equals("2")){
+                    Intent intent = new Intent(MainActivity.this, ParentInfoActivity.class);
+                    MainActivity.this.startActivity(intent);
+                }
+                else if (Config.APP_TYPE.equals("3")){
+                    Intent intent = new Intent(MainActivity.this, AdminInfoActivity.class);
+                    MainActivity.this.startActivity(intent);
+                }
+                else{
+                    Intent intent = new Intent(MainActivity.this, HomeInfoActivity.class);
+                    MainActivity.this.startActivity(intent);
+                }
+            }
+        });
         fab_follow.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -303,6 +325,9 @@ public class MainActivity extends AppCompatActivity {
                 fab_register.startAnimation(fabClose);
                 fab_login.setVisibility(View.INVISIBLE);
                 fab_register.setVisibility(View.INVISIBLE);
+                fab_home_info.startAnimation(fabClose);
+                fab_home_info.setVisibility(View.INVISIBLE);
+
             }
             else {
                 mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -316,6 +341,8 @@ public class MainActivity extends AppCompatActivity {
                         fab_logout.startAnimation(fabClose);
                         fab_logout.setVisibility(View.INVISIBLE);
                         fab_sos.setVisibility(View.INVISIBLE);
+                        fab_home_info.startAnimation(fabClose);
+                        fab_home_info.setVisibility(View.INVISIBLE);
                         if (Config.APP_TYPE.equals("1")){
                             fab_children.setVisibility(View.INVISIBLE);
                             fab_children.startAnimation(fabClose);
@@ -355,6 +382,8 @@ public class MainActivity extends AppCompatActivity {
                 fab_register.startAnimation(fabOpen);
                 fab_login.setVisibility(View.VISIBLE);
                 fab_register.setVisibility(View.VISIBLE);
+                fab_home_info.startAnimation(fabOpen);
+                fab_home_info.setVisibility(View.VISIBLE);
             }
             else {
                 mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -364,6 +393,9 @@ public class MainActivity extends AppCompatActivity {
                     public void onDataChange(DataSnapshot snapshot) {
                         Config.APP_TYPE = snapshot.getValue().toString();
                         fab_menu.startAnimation(rotateBackward);
+
+                        fab_home_info.startAnimation(fabOpen);
+                        fab_home_info.setVisibility(View.VISIBLE);
 
                         fab_sos.startAnimation(fabOpen);
                         fab_logout.startAnimation(fabOpen);
