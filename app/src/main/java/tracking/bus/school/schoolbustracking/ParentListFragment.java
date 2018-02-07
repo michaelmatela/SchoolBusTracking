@@ -66,7 +66,10 @@ public class ParentListFragment extends Fragment implements PopupMenu.OnMenuItem
         user = mAuth.getCurrentUser();
         fab_menu = (FloatingActionButton) getActivity().findViewById(R.id.fab_menu);
 
+        Button btnUnauthorized;
+        btnUnauthorized = (Button) view.findViewById(R.id.btnUnauthorized);
 
+        btnUnauthorized.setVisibility(View.GONE);
 
         Firebase.setAndroidContext(getActivity());
 
@@ -123,6 +126,7 @@ public class ParentListFragment extends Fragment implements PopupMenu.OnMenuItem
                         driver.setPassword(ds.child("email").getValue().toString());
                         driver.setType(ds.child("type").getValue().toString());
                         driver.setPhoneNumber(ds.child("phoneNumber").getValue().toString());
+                        driver.setArea(ds.child("area").getValue().toString());
 
                         try{
                             driver.setAssignee(ds.child("assignee").getValue().toString());

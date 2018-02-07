@@ -86,6 +86,102 @@ public class MainActivity extends AppCompatActivity {
         rotateForward = AnimationUtils.loadAnimation(this,R.anim.rotate_forward);
         rotateBackward = AnimationUtils.loadAnimation(this,R.anim.rotate_backward);
 
+        fab_menu.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(MainActivity.this, "Press to open menu.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
+
+        fab_admin_map.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(MainActivity.this, "Set school location in google map.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
+
+        fab_follow.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(MainActivity.this, "Track driver location.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
+
+        fab_profile.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(MainActivity.this, "Set home location.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
+
+        fab_children.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(MainActivity.this, "View children list.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
+
+        fab_sos.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(MainActivity.this, "View sos list.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
+
+        fab_parent_lists.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(MainActivity.this, "Manage guardian list.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
+
+        fab_parent_to_driver.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(MainActivity.this, "Assign driver to parent.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
+
+        fab_logout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(MainActivity.this, "Logout.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
+
+        fab_login.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(MainActivity.this, "Login.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
+
+        fab_register.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(MainActivity.this, "Register.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
+
+        fab_driver_lists.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(MainActivity.this, "Manage registered driver list.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
+
         fab_menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,19 +201,22 @@ public class MainActivity extends AppCompatActivity {
         fab_home_info.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                if (Config.APP_TYPE.equals("1")) {
-                    Intent intent = new Intent(MainActivity.this, DriverInfoActivity.class);
-                    MainActivity.this.startActivity(intent);
+                try {
+                    if (Config.APP_TYPE.equals("1")) {
+                        Intent intent = new Intent(MainActivity.this, DriverInfoActivity.class);
+                        MainActivity.this.startActivity(intent);
+                    } else if (Config.APP_TYPE.equals("2")) {
+                        Intent intent = new Intent(MainActivity.this, ParentInfoActivity.class);
+                        MainActivity.this.startActivity(intent);
+                    } else if (Config.APP_TYPE.equals("3")) {
+                        Intent intent = new Intent(MainActivity.this, AdminInfoActivity.class);
+                        MainActivity.this.startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(MainActivity.this, HomeInfoActivity.class);
+                        MainActivity.this.startActivity(intent);
+                    }
                 }
-                else if (Config.APP_TYPE.equals("2")){
-                    Intent intent = new Intent(MainActivity.this, ParentInfoActivity.class);
-                    MainActivity.this.startActivity(intent);
-                }
-                else if (Config.APP_TYPE.equals("3")){
-                    Intent intent = new Intent(MainActivity.this, AdminInfoActivity.class);
-                    MainActivity.this.startActivity(intent);
-                }
-                else{
+                catch  (Exception e){
                     Intent intent = new Intent(MainActivity.this, HomeInfoActivity.class);
                     MainActivity.this.startActivity(intent);
                 }
@@ -166,6 +265,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
 
         fab_parent_to_driver.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -325,8 +426,8 @@ public class MainActivity extends AppCompatActivity {
                 fab_register.startAnimation(fabClose);
                 fab_login.setVisibility(View.INVISIBLE);
                 fab_register.setVisibility(View.INVISIBLE);
-                fab_home_info.startAnimation(fabClose);
-                fab_home_info.setVisibility(View.INVISIBLE);
+                //fab_home_info.startAnimation(fabClose);
+                //fab_home_info.setVisibility(View.INVISIBLE);
 
             }
             else {
@@ -341,8 +442,8 @@ public class MainActivity extends AppCompatActivity {
                         fab_logout.startAnimation(fabClose);
                         fab_logout.setVisibility(View.INVISIBLE);
                         fab_sos.setVisibility(View.INVISIBLE);
-                        fab_home_info.startAnimation(fabClose);
-                        fab_home_info.setVisibility(View.INVISIBLE);
+                        //fab_home_info.startAnimation(fabClose);
+                        //fab_home_info.setVisibility(View.INVISIBLE);
                         if (Config.APP_TYPE.equals("1")){
                             fab_children.setVisibility(View.INVISIBLE);
                             fab_children.startAnimation(fabClose);
@@ -382,8 +483,8 @@ public class MainActivity extends AppCompatActivity {
                 fab_register.startAnimation(fabOpen);
                 fab_login.setVisibility(View.VISIBLE);
                 fab_register.setVisibility(View.VISIBLE);
-                fab_home_info.startAnimation(fabOpen);
-                fab_home_info.setVisibility(View.VISIBLE);
+                //fab_home_info.startAnimation(fabOpen);
+                //fab_home_info.setVisibility(View.VISIBLE);
             }
             else {
                 mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -394,8 +495,8 @@ public class MainActivity extends AppCompatActivity {
                         Config.APP_TYPE = snapshot.getValue().toString();
                         fab_menu.startAnimation(rotateBackward);
 
-                        fab_home_info.startAnimation(fabOpen);
-                        fab_home_info.setVisibility(View.VISIBLE);
+                        //fab_home_info.startAnimation(fabOpen);
+                        //fab_home_info.setVisibility(View.VISIBLE);
 
                         fab_sos.startAnimation(fabOpen);
                         fab_logout.startAnimation(fabOpen);

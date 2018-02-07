@@ -107,7 +107,7 @@ public class ChildMapsActivity extends FragmentActivity implements OnMapReadyCal
                     toLocation = snapshot.child("latitude").getValue().toString() + "," + snapshot.child("longtitude").getValue().toString();
                     mFirebaseDatabase = FirebaseDatabase.getInstance();
                     myRef = mFirebaseDatabase.getReference().child("DriverLocation").child(user.getUid());
-                    myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    myRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot snapshot) {
                             if (snapshot.hasChild("latitude")) {
@@ -247,8 +247,8 @@ public class ChildMapsActivity extends FragmentActivity implements OnMapReadyCal
 
     @Override
     public void onDirectionFinderStart() {
-        progressDialog = ProgressDialog.show(this, "Please wait.",
-                "Finding direction..!", true);
+       // progressDialog = ProgressDialog.show(this, "Please wait.",
+        //        "Finding direction..!", true);
 
         if (originMarkers != null) {
             for (Marker marker : originMarkers) {
@@ -271,7 +271,7 @@ public class ChildMapsActivity extends FragmentActivity implements OnMapReadyCal
 
     @Override
     public void onDirectionFinderSuccess(List<Route> routes) {
-        progressDialog.dismiss();
+        //progressDialog.dismiss();
         polylinePaths = new ArrayList<>();
         originMarkers = new ArrayList<>();
         destinationMarkers = new ArrayList<>();

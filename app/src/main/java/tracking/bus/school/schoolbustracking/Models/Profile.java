@@ -15,10 +15,23 @@ public class Profile {
     private String number_of_child;
     private String assignee;
     private String id;
+    private String area;
+    private String status;
+    private String plateNumber;
 
     public Profile (){
 
     }
+
+    public String getPlateNumber() { return plateNumber; }
+    public void setPlateNumber(String plateNumber) { this.plateNumber= plateNumber;}
+    public String getStatus() { return status; }
+
+    public void setStatus(String status) { this.status = status; }
+
+    public String getArea() { return area; }
+
+    public void setArea(String area) { this.area = area; }
 
     public String getAssignee() { return assignee; }
 

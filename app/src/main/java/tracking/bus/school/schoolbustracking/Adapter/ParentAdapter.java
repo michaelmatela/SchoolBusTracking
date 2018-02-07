@@ -40,6 +40,7 @@ public class ParentAdapter
         public TextView tvChild;
 
         public TextView tvId;
+        public TextView tvArea;
 
         public MyViewHolder(View view){
             super(view);
@@ -50,6 +51,7 @@ public class ParentAdapter
             tvId = (TextView) view.findViewById(R.id.tvId);
             tvChild = (TextView) view.findViewById(R.id.tvChild);
             tvAssignee = (TextView) view.findViewById(R.id.tvAssignee);
+            tvArea = (TextView) view.findViewById(R.id.tvArea);
         }
     }
 
@@ -65,6 +67,7 @@ public class ParentAdapter
         holder.tvChild.setText(d.getNumber_of_child());
         holder.tvPhoneNumber.setText(d.getPhoneNumber());
         holder.tvAssignee.setText(d.getAssignee());
+        holder.tvArea.setText(d.getArea());
     }
 
     @Override

@@ -52,6 +52,7 @@ public class ParentToDriverActivity extends AppCompatActivity implements PopupMe
 
     String parentId;
     String count;
+    String area;
 
     FloatingActionButton fab_menu;
 
@@ -98,6 +99,7 @@ public class ParentToDriverActivity extends AppCompatActivity implements PopupMe
                         driver.setId(ds.getKey().toString());
                         driver.setPassword(ds.child("email").getValue().toString());
                         driver.setType(ds.child("type").getValue().toString());
+                        driver.setArea(ds.child("area").getValue().toString());
                         try{
                             driver.setAssignee(ds.child("assignee").getValue().toString());
                         }
@@ -139,6 +141,7 @@ public class ParentToDriverActivity extends AppCompatActivity implements PopupMe
                                 else{
                                     parentId = parent.getId();
                                     count = parent.getNumber_of_child();
+                                    area = parent.getArea();
                                     popup = new PopupMenu(ParentToDriverActivity.this, v);
                                     MenuInflater inflater2 = popup.getMenuInflater();
                                     inflater2.inflate(R.menu.driver_list_menu, popup.getMenu());
@@ -184,6 +187,7 @@ public class ParentToDriverActivity extends AppCompatActivity implements PopupMe
 
                 bundle.putString("parentId", parentId );
                 bundle.putString("count",count);
+                bundle.putString("area", area);
 
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -196,6 +200,113 @@ public class ParentToDriverActivity extends AppCompatActivity implements PopupMe
                 findViewById(R.id.llButtons).setVisibility(View.GONE);
                 return true;
 
+            case R.id.mnuUnAssign:
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+
+                                mFirebaseDatabase = FirebaseDatabase.getInstance();
+                                myRef = mFirebaseDatabase.getReference().child("Children");
+                                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot snapshot) {
+
+                                        for (DataSnapshot ds : snapshot.getChildren()) {
+                                            try {
+                                                if (ds.child("parent").getValue().toString().equals(parentId)) {
+                                                    Child child = new Child();
+                                                    child.setAge(ds.child("age").getValue().toString());
+                                                    child.setGender(ds.child("gender").getValue().toString());
+                                                    child.setName(ds.child("name").getValue().toString());
+                                                    child.setParent(ds.child("parent").getValue().toString());
+                                                    child.setStatus("Home");
+                                                    child.setTimeIn(ds.child("timeIn").getValue().toString());
+                                                    child.setTimeOut(ds.child("timeOut").getValue().toString());
+                                                    Firebase ref = new Firebase(Config.FIREBASE_URL);
+                                                    String driver = ds.child("driver").getValue().toString();
+                                                    ref.child("Children").child(child.getName()).setValue(child);
+
+                                                    mFirebaseDatabase = FirebaseDatabase.getInstance();
+                                                    myRef = mFirebaseDatabase.getReference().child("Profile").child(driver);
+                                                    myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(DataSnapshot snapshot) {
+
+                                                            try {
+                                                                Firebase ref = new Firebase(Config.FIREBASE_URL);
+                                                                ref.child("Profile").child(snapshot.child("id").getValue().toString()).child("current").setValue(String.valueOf(Integer.parseInt(snapshot.child("current").getValue().toString()) - Integer.parseInt(count)));
+                                                            }
+                                                            catch (Exception e) {}
+
+                                                        }
+                                                        @Override
+                                                        public void onCancelled(DatabaseError databaseError) {
+                                                        }
+                                                    });
+
+                                                    mFirebaseDatabase = FirebaseDatabase.getInstance();
+                                                    myRef = mFirebaseDatabase.getReference().child("Profile").child(parentId);
+                                                    myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(DataSnapshot snapshot) {
+
+                                                            try {
+                                                                Firebase ref = new Firebase(Config.FIREBASE_URL);
+                                                                ref.child("Profile").child(parentId).child("assignee").setValue(null);
+                                                            }
+                                                            catch (Exception e) {}
+
+                                                        }
+                                                        @Override
+                                                        public void onCancelled(DatabaseError databaseError) {
+                                                        }
+                                                    });
+
+                                                    mFirebaseDatabase = FirebaseDatabase.getInstance();
+                                                    myRef = mFirebaseDatabase.getReference().child("ParentDriver").child(parentId);
+                                                    myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(DataSnapshot snapshot) {
+
+                                                            try {
+                                                                Firebase ref = new Firebase(Config.FIREBASE_URL);
+                                                                ref.child("ParentDriver").child(parentId).setValue(null);
+                                                            }
+                                                            catch (Exception e) {}
+
+                                                        }
+                                                        @Override
+                                                        public void onCancelled(DatabaseError databaseError) {
+                                                        }
+                                                    });
+
+                                                }
+                                            }
+                                            catch (Exception e) {}
+                                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                    }
+                                });
+                                break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                //No button clicked
+                                break;
+                        }
+                    }
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(ParentToDriverActivity.this);
+                builder.setMessage("Are you sure you want to remove assigned driver?").setPositiveButton("Yes", dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener).show();
+
+
+
+                return true;
             default:
                 return false;
         }

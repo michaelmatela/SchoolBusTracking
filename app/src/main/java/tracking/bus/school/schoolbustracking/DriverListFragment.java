@@ -45,9 +45,13 @@ import tracking.bus.school.schoolbustracking.Models.Profile;
 public class DriverListFragment extends Fragment implements PopupMenu.OnMenuItemClickListener {
     View view;
     Button btnBack;
+    int samplePosition;
+    Profile profile;
 
     DriverAdapter driverAdapter;
     ArrayList<Profile> drivers;
+String parentId;
+    Button btnUnauthorized;
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myRef;
@@ -99,6 +103,16 @@ public class DriverListFragment extends Fragment implements PopupMenu.OnMenuItem
                                        }
                                    });
 
+        btnUnauthorized = (Button) view.findViewById(R.id.btnUnauthorized);
+
+        btnUnauthorized.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), UnauthorizedDriversActivity.class);
+                getContext().startActivity(intent);
+            }
+        });
+
         getChildrenList();
         return view;
     }
@@ -123,6 +137,8 @@ public class DriverListFragment extends Fragment implements PopupMenu.OnMenuItem
                         driver.setPassword(ds.child("email").getValue().toString());
                         driver.setType(ds.child("type").getValue().toString());
                         driver.setPhoneNumber(ds.child("phoneNumber").getValue().toString());
+                        driver.setArea(ds.child("area").getValue().toString());
+                        driver.setStatus(ds.child("status").getValue().toString());
 
                         try {
                             driver.setCapacity(ds.child("capacity").getValue().toString());
@@ -131,7 +147,8 @@ public class DriverListFragment extends Fragment implements PopupMenu.OnMenuItem
                             driver.setCapacity("0");
                             driver.setCurrent("0");
                         }
-                        drivers.add(driver);
+                        if (driver.getStatus().equals("1"))
+                            drivers.add(driver);
                     }
 
 
@@ -153,33 +170,16 @@ public class DriverListFragment extends Fragment implements PopupMenu.OnMenuItem
                 rv.addOnItemTouchListener(new RecyclerItemListener(getContext(), rv,
                         new RecyclerItemListener.RecyclerTouchListener() {
                             public void onClickItem(View v, int position) {
-                                final int samplePosition = position;
+                                samplePosition = position;
 
                                 if (Config.APP_TYPE.equals("3")){
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                    builder.setTitle("Input Capacity");
-                                   View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.input_box_layout, (ViewGroup) getView(), false);
-                                    final EditText input = (EditText) viewInflated.findViewById(R.id.input);
-                                    builder.setView(viewInflated);
 
-                                    builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            Profile profile = new Profile();
-                                            profile = drivers.get(samplePosition);
-                                            profile.setCapacity(input.getText().toString());
-                                            addChild(profile);
-                                            dialog.dismiss();
-                                        }
-                                    });
-                                    builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.cancel();
-                                        }
-                                    });
+                                    popup = new PopupMenu(getActivity(), v);
+                                    MenuInflater inflater2 = popup.getMenuInflater();
+                                    inflater2.inflate(R.menu.assign_driver, popup.getMenu());
 
-                                    builder.show();
+                                    popup.setOnMenuItemClickListener(DriverListFragment.this);
+                                    popup.show();
                                 }
 
                             }
@@ -194,14 +194,11 @@ public class DriverListFragment extends Fragment implements PopupMenu.OnMenuItem
             }
         });
     }
-
     private void addChild(Profile profile){
                 Firebase ref = new Firebase(Config.FIREBASE_URL);
                 profile.setCurrent("0");
                 ref.child("Profile").child(profile.getId()).setValue(profile);
                 Toast.makeText(getActivity(), "Edit Capacity successful.", Toast.LENGTH_LONG).show();
-
-
     }
 
     public void removeFragment(){
@@ -218,9 +215,133 @@ public class DriverListFragment extends Fragment implements PopupMenu.OnMenuItem
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         Firebase ref = new Firebase(Config.FIREBASE_URL);
-        Child destination = new Child();
+
         switch (item.getItemId()) {
-            case R.id.mnuFollowChild:
+            case R.id.mnuCapacity:
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Input Capacity");
+                View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.input_box_layout, (ViewGroup) getView(), false);
+                final EditText input = (EditText) viewInflated.findViewById(R.id.input);
+                builder.setView(viewInflated);
+
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Profile profile = new Profile();
+                        profile = drivers.get(samplePosition);
+                        profile.setCapacity(input.getText().toString());
+                        addChild(profile);
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+                return true;
+            case R.id.mnuUnauthorize:
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+
+                                profile = drivers.get(samplePosition);
+                                Firebase ref = new Firebase(Config.FIREBASE_URL);
+                                profile.setStatus("0");
+                                profile.setCapacity("0");
+                                profile.setCurrent("0");
+                                ref.child("Profile").child(profile.getId()).setValue(profile);
+
+                                mFirebaseDatabase = FirebaseDatabase.getInstance();
+                                myRef = mFirebaseDatabase.getReference().child("Children");
+                                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot snapshot) {
+
+                                        for (DataSnapshot ds : snapshot.getChildren()) {
+                                            try {
+                                                if (ds.child("driver").getValue().toString().equals(profile.getId())) {
+                                                    Child child = new Child();
+                                                    child.setAge(ds.child("age").getValue().toString());
+                                                    child.setGender(ds.child("gender").getValue().toString());
+                                                    child.setName(ds.child("name").getValue().toString());
+                                                    child.setParent(ds.child("parent").getValue().toString());
+                                                    child.setStatus("Home");
+                                                    child.setTimeIn(ds.child("timeIn").getValue().toString());
+                                                    child.setTimeOut(ds.child("timeOut").getValue().toString());
+                                                    Firebase ref = new Firebase(Config.FIREBASE_URL);
+
+                                                    ref.child("Children").child(child.getName()).setValue(child);
+
+                                                    parentId = child.getParent();
+                                                    mFirebaseDatabase = FirebaseDatabase.getInstance();
+                                                    myRef = mFirebaseDatabase.getReference().child("Profile").child(parentId);
+                                                    myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(DataSnapshot snapshot) {
+
+                                                            try {
+                                                                Firebase ref = new Firebase(Config.FIREBASE_URL);
+                                                                ref.child("Profile").child(parentId).child("assignee").setValue(null);
+                                                            }
+                                                            catch (Exception e) {}
+
+                                                        }
+                                                        @Override
+                                                        public void onCancelled(DatabaseError databaseError) {
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                            catch (Exception e) {}
+                                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                    }
+                                });
+
+                                mFirebaseDatabase = FirebaseDatabase.getInstance();
+                                myRef = mFirebaseDatabase.getReference().child("ParentDriver");
+                                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot snapshot) {
+
+                                        for (DataSnapshot ds : snapshot.getChildren()) {
+                                            try {
+                                                if (ds.getValue().toString().equals(profile.getId())) {
+                                                    Firebase ref = new Firebase(Config.FIREBASE_URL);
+                                                    ref.child("ParentDriver").child(ds.getKey()).setValue(null);
+                                                }
+                                            }
+                                            catch(Exception e) {}
+                                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                    }
+                                });
+
+                                Toast.makeText(getContext(), "Driver is now unauthorized to be assigned to a guardian.", Toast.LENGTH_LONG).show();
+
+                                break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                //No button clicked
+                                break;
+                        }
+                    }
+                };
+
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
+                builder1.setMessage("Are you sure you want to unauthorize this driver to be a school service driver?").setPositiveButton("Yes", dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener).show();
 
                 return true;
             default:

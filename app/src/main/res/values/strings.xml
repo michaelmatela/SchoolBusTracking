@@ -2,10 +2,20 @@
     <string name="app_name">Servisibility</string>
 
     <string-array name="array_spinner">
-        <item>Please pick one...</item>
+        <item>Select access level...</item>
         <item>Parent</item>
         <item>Driver</item>
         <item>Admin</item>
+    </string-array>
+
+    <string-array name="array_spinner1">
+        <item>Select area...</item>
+        <item>Montalban</item>
+        <item>San Mateo</item>
+        <item>Marikina</item>
+        <item>Pasig</item>
+        <item>Cainta</item>
+        <item>Quezon City</item>
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->

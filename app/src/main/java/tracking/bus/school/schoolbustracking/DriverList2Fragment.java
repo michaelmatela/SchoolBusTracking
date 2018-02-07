@@ -43,6 +43,8 @@ public class DriverList2Fragment extends Fragment implements PopupMenu.OnMenuIte
     DriverAdapter driverAdapter;
     ArrayList<Profile> drivers;
 
+    String parentId;
+
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myRef;
 
@@ -54,6 +56,7 @@ public class DriverList2Fragment extends Fragment implements PopupMenu.OnMenuIte
     String parent_id;
     String children_count;
     String driver;
+    String area;
 
     FloatingActionButton fab_menu;
 
@@ -70,6 +73,12 @@ public class DriverList2Fragment extends Fragment implements PopupMenu.OnMenuIte
         Bundle args = getArguments();
         parent_id = args.getString("parentId", "");
         children_count = args.getString("count","0");
+        area = args.getString("area", "");
+
+        Button btnUnauthorized;
+        btnUnauthorized = (Button) view.findViewById(R.id.btnUnauthorized);
+
+        btnUnauthorized.setVisibility(View.GONE);
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         myRef = mFirebaseDatabase.getReference().child("ParentDriver").child(parent_id);
@@ -128,6 +137,8 @@ public class DriverList2Fragment extends Fragment implements PopupMenu.OnMenuIte
                         driver.setPassword(ds.child("email").getValue().toString());
                         driver.setType(ds.child("type").getValue().toString());
                         driver.setPhoneNumber(ds.child("phoneNumber").getValue().toString());
+                        driver.setStatus(ds.child("status").getValue().toString());
+                        driver.setArea(ds.child("area").getValue().toString());
 
                         try {
                             driver.setCapacity(ds.child("capacity").getValue().toString());
@@ -136,7 +147,10 @@ public class DriverList2Fragment extends Fragment implements PopupMenu.OnMenuIte
                             driver.setCapacity("0");
                             driver.setCurrent("0");
                         }
-                        drivers.add(driver);
+                        if (area.equals(driver.getArea())) {
+                            if (driver.getStatus().equals("1"))
+                                drivers.add(driver);
+                        }
                     }
 
 
@@ -174,6 +188,42 @@ public class DriverList2Fragment extends Fragment implements PopupMenu.OnMenuIte
                                                         int a = Integer.parseInt(children_count) + Integer.parseInt(profile.getCurrent());
                                                         profile.setCurrent(Integer.toString(a));
                                                         addChild(profile);
+
+                                                        mFirebaseDatabase = FirebaseDatabase.getInstance();
+                                                        myRef = mFirebaseDatabase.getReference().child("Children");
+                                                        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(DataSnapshot snapshot) {
+
+                                                                for (DataSnapshot ds : snapshot.getChildren()) {
+                                                                    try {
+                                                                        if (ds.child("parent").getValue().toString().equals(parent_id)) {
+                                                                            Child child = new Child();
+                                                                            child.setAge(ds.child("age").getValue().toString());
+                                                                            child.setGender(ds.child("gender").getValue().toString());
+                                                                            child.setName(ds.child("name").getValue().toString());
+                                                                            child.setDriver(profile.getId());
+                                                                            child.setParent(ds.child("parent").getValue().toString());
+                                                                            child.setStatus("Home");
+                                                                            child.setTimeIn(ds.child("timeIn").getValue().toString());
+                                                                            child.setTimeOut(ds.child("timeOut").getValue().toString());
+                                                                            Firebase ref = new Firebase(Config.FIREBASE_URL);
+
+                                                                            parentId = child.getParent();
+                                                                            ref.child("Children").child(child.getName()).setValue(child);
+
+
+                                                                        }
+                                                                    }
+                                                                    catch (Exception e) {}
+                                                                }
+                                                                String a = "";
+                                                                if(a.isEmpty()){}
+                                                            }
+                                                            @Override
+                                                            public void onCancelled(DatabaseError databaseError) {
+                                                            }
+                                                        });
                                                     }
                                                 }
                                                 else{

@@ -13,6 +13,15 @@
         android:backgroundTint="#ffe680"
         android:id="@+id/btnBack" />
 
+    <Button
+        android:text="Unauthorized Drivers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:textColor="#ffffff"
+        android:backgroundTint="#ffe680"
+        android:id="@+id/btnUnauthorized" />
+
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -29,6 +29,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import tracking.bus.school.schoolbustracking.Models.Profile;
 
@@ -42,6 +43,7 @@ public class RegisterFragment extends Fragment {
     private ProgressDialog progressDialog;
 
     Spinner spinner;
+    Spinner spinner1;
     Button backButton;
     Button registerButton;
     EditText etFullName;
@@ -51,6 +53,8 @@ public class RegisterFragment extends Fragment {
     EditText etRePassword;
     ImageView ivPic;
 
+    String status;
+    String area;
     String fullName;
     String phoneNumber;
     String email;
@@ -113,6 +117,7 @@ ivPic = (ImageView) view.findViewById(R.id.ivPic);
         etPassword = (EditText) view.findViewById(R.id.etPassword);
         etRePassword = (EditText) view.findViewById(R.id.etRePassword);
         spinner = (Spinner) view.findViewById(R.id.spinner);
+        spinner1 = (Spinner) view.findViewById(R.id.spinner1);
 
         email = etEmail.getText().toString();
         fullName = etFullName.getText().toString();
@@ -120,6 +125,7 @@ ivPic = (ImageView) view.findViewById(R.id.ivPic);
         password = etPassword.getText().toString();
         rePassword = etRePassword.getText().toString();
         userAccess = spinner.getSelectedItem().toString();
+        area = spinner1.getSelectedItem().toString();
 
         if (userAccess.equals("Admin"))
             userAccess = "3";
@@ -131,6 +137,15 @@ ivPic = (ImageView) view.findViewById(R.id.ivPic);
             Toast.makeText(getActivity(), "Please choose desired user access.", Toast.LENGTH_LONG).show();
             return;
         }
+
+        if (userAccess.equals("Driver") || userAccess.equals("Parent")){
+            if (area.equals("Select area...")){
+                Toast.makeText(getActivity(), "Please choose desired area.", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+        }
+
         if(email.isEmpty() || fullName.isEmpty() || password.isEmpty() || rePassword.isEmpty() || phoneNumber.isEmpty()){
             Toast.makeText(getActivity(), "Please fill required fields.", Toast.LENGTH_LONG).show();
         } else{
@@ -166,6 +181,10 @@ ivPic = (ImageView) view.findViewById(R.id.ivPic);
                                                             profile.setEmail(email);
                                                             profile.setPassword(password);
                                                             profile.setType(userAccess);
+                                                            profile.setArea(area);
+
+                                                            if (userAccess.equals("1"))
+                                                                profile.setStatus("0");
 
                                                             ref.child("Profile").child(user.getUid()).setValue(profile);
 
@@ -233,12 +252,15 @@ ivPic = (ImageView) view.findViewById(R.id.ivPic);
 
 
     public void removeFragment(){
-        List<Fragment> fragments = getActivity().getSupportFragmentManager().getFragments();
-        if (fragments != null) {
-            for (Fragment fragment : fragments) {
-                if (fragment != null)
-                getActivity().getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+        try {
+            List<Fragment> fragments = getActivity().getSupportFragmentManager().getFragments();
+            if (fragments != null) {
+                for (Fragment fragment : fragments) {
+                    if (fragment != null)
+                        getActivity().getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+                }
             }
         }
+        catch (Exception e){}
     }
 }

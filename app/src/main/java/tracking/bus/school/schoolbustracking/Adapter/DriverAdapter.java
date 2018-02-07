@@ -41,6 +41,7 @@ public class DriverAdapter
         public TextView tvCurrent;
 
         public TextView tvPhoneNumber;
+        public TextView tvArea;
 
         public TextView tvId;
 
@@ -54,6 +55,7 @@ public class DriverAdapter
             tvCapacity = (TextView) view.findViewById(R.id.tvCapacity);
 
             tvCurrent = (TextView) view.findViewById(R.id.tvCurrent);
+            tvArea = (TextView) view.findViewById(R.id.tvArea);
         }
     }
 
@@ -69,6 +71,7 @@ public class DriverAdapter
         holder.tvCapacity.setText(d.getCapacity());
         holder.tvCurrent.setText(d.getCurrent());
         holder.tvPhoneNumber.setText(d.getPhoneNumber());
+        holder.tvArea.setText(d.getArea());
     }
 
     @Override
